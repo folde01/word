@@ -23,6 +23,8 @@ object Game {
 
   private var gameState: GameState = AddPlayer(0)
 
+  def getGameState: GameState = gameState
+
   def newGame: Option[Game] = {
     game = Some(Game())
     game

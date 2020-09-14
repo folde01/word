@@ -26,21 +26,21 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
 
   def newGame: Action[AnyContent] = Action {
     Game.newGame
-    Ok(Json.toJson("new game"))
+    Ok(Json.toJson(Game.getGameState.toString))
   }
 
   def guess(guesserId: Int, word: String, guesseeId: Int): Action[AnyContent] = Action {
     val result: Option[Answer] = Game.guess(guesserId, word, guesseeId)
 
     Ok(Json.toJson(result match {
-      case Some(answer) => answer.lettersInCommon.toString
-      case None => "No secret word"
+      case Some(answer) => answer.toString
+      case None => "Wrong game state"
     }))
   }
 
   def addPlayer(name: String, secretWord: String): Action[AnyContent] = Action {
     val result: Int = Game.addPlayer(name, secretWord)
-    Ok(Json.toJson(result))
+    Ok(Json.toJson(Game.getGameState.toString))
   }
 
 
