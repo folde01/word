@@ -6,6 +6,7 @@
 # An example controller showing a sample home page
 GET     /                           controllers.HomeController.index
 GET     /getNumber                  controllers.HomeController.getNumber(guessedWord: String)
+GET     /setSecretWord                  controllers.HomeController.setSecretWord(str: String)
 
 
 # Map static resources from the /public folder to the /assets URL path

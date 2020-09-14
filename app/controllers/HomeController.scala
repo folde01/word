@@ -28,4 +28,9 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     val number: Int = SecretWord.getNumber(guessedWord)
     Ok(Json.toJson(number))
   }
+
+  def setSecretWord(str: String) = Action {
+    val secretWord: String = SecretWord.setSecretWord(str)
+    Ok(Json.toJson(secretWord))
+  }
 }
