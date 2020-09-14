@@ -1,6 +1,7 @@
 package models
 
 import scala.collection.mutable.ListBuffer
+import scala.util.{Try, Success, Failure}
 
 case class Game() {
 
@@ -34,7 +35,13 @@ object Game {
   def addPlayer(id: Int, name: String, secretWord: String): Int =
     getGame.addPlayer(Player(id, name, secretWord))
 
-  def getNumber(guessedWord: String, secretHolderId: Int) =
-    getGame.getNumber(guessedWord, secretHolderId)
+  def getNumber(guessedWord: String, secretHolderId: Int): Option[Int] = game match {
+    case None => {
+      newGame
+      None
+    }
+    case Some(game) =>
+      Some(game.getNumber(guessedWord, secretHolderId))
+  }
 
 }

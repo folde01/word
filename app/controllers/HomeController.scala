@@ -30,8 +30,12 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
   }
 
   def getNumber(guessedWord: String, secretHolderId: Int) = Action {
-    val number: Int = Game.getNumber(guessedWord, secretHolderId)
-    Ok(Json.toJson(number))
+    val result: Option[Int] = Game.getNumber(guessedWord, secretHolderId)
+
+    Ok(Json.toJson(result match {
+      case Some(n) => n.toString
+      case None => "No secret word"
+    }))
   }
 
   def addPlayer(id: Int, name: String, secretWord: String) = Action {
