@@ -1,7 +1,7 @@
 package controllers
 
 import javax.inject._
-import models.SecretWord
+import models.Game
 import play.api._
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -24,13 +24,13 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     Ok(views.html.index())
   }
 
-  def getNumber(guessedWord: String) = Action {
-    val number: Int = SecretWord.getNumber(guessedWord)
+  def getNumber(guessedWord: String, secretHolderId: Int) = Action {
+    val number: Int = Game.getNumber(guessedWord, secretHolderId)
     Ok(Json.toJson(number))
   }
 
-  def setSecretWord(str: String) = Action {
-    val secretWord: String = SecretWord.setSecretWord(str)
-    Ok(Json.toJson(secretWord))
+  def addPlayer(id: Int, name: String, secretWord: String) = Action {
+    val result: Int = Game.addPlayer(id, name, secretWord)
+    Ok(Json.toJson(result))
   }
 }

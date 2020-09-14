@@ -5,9 +5,8 @@
 
 # An example controller showing a sample home page
 GET     /                           controllers.HomeController.index
-GET     /getNumber                  controllers.HomeController.getNumber(guessedWord: String)
-GET     /setSecretWord                  controllers.HomeController.setSecretWord(str: String)
-
+GET     /getNumber                  controllers.HomeController.getNumber(guessedWord: String, secretHolderId: Int)
+GET     /addPlayer             controllers.HomeController.addPlayer(id: Int, name: String, secretWord: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
