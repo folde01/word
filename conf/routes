@@ -6,8 +6,8 @@
 # An example controller showing a sample home page
 GET     /                           controllers.HomeController.index
 GET     /newGame                    controllers.HomeController.newGame
-GET     /addPlayer                  controllers.HomeController.addPlayer(id: Int, name: String, secretWord: String)
-GET     /getNumber                  controllers.HomeController.getNumber(guessedWord: String, secretHolderId: Int)
+GET     /addPlayer                  controllers.HomeController.addPlayer(name: String, secretWord: String)
+GET     /guess                      controllers.HomeController.guess(guesserId: Int, word: String, guesseeId: Int)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

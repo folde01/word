@@ -1,7 +1,7 @@
 package controllers
 
 import javax.inject._
-import models.Game
+import models.{Answer, Game}
 import play.api._
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -20,26 +20,28 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
    * will be called when the application receives a `GET` request with
    * a path of `/`.
    */
-  def index() = Action { implicit request: Request[AnyContent] =>
+  def index(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     Ok(views.html.index())
   }
 
-  def newGame = Action {
+  def newGame: Action[AnyContent] = Action {
     Game.newGame
     Ok(Json.toJson("new game"))
   }
 
-  def getNumber(guessedWord: String, secretHolderId: Int) = Action {
-    val result: Option[Int] = Game.getNumber(guessedWord, secretHolderId)
+  def guess(guesserId: Int, word: String, guesseeId: Int): Action[AnyContent] = Action {
+    val result: Option[Answer] = Game.guess(guesserId, word, guesseeId)
 
     Ok(Json.toJson(result match {
-      case Some(n) => n.toString
+      case Some(answer) => answer.lettersInCommon.toString
       case None => "No secret word"
     }))
   }
 
-  def addPlayer(id: Int, name: String, secretWord: String) = Action {
-    val result: Int = Game.addPlayer(id, name, secretWord)
+  def addPlayer(name: String, secretWord: String): Action[AnyContent] = Action {
+    val result: Int = Game.addPlayer(name, secretWord)
     Ok(Json.toJson(result))
   }
+
+
 }

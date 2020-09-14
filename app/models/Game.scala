@@ -1,12 +1,11 @@
 package models
 
 import scala.collection.mutable.ListBuffer
-import scala.util.{Try, Success, Failure}
 
 case class Game() {
 
-  def getNumber(guessedWord: String, secretHolderId: Int): Int = {
-    players(secretHolderId).secretWord.toSeq.intersect(guessedWord).unwrap.length
+  def guess(word: String, guesseeId: Int): Int = {
+    players(guesseeId).secretWord.toSeq.intersect(word).unwrap.length
   }
 
   private var players: ListBuffer[Player] = ListBuffer.empty
@@ -22,6 +21,8 @@ object Game {
 
   private var game: Option[Game] = None
 
+  private var gameState: GameState = AddPlayer(0)
+
   def newGame: Option[Game] = {
     game = Some(Game())
     game
@@ -32,16 +33,40 @@ object Game {
     case Some(_) => game.get
   }
 
-  def addPlayer(id: Int, name: String, secretWord: String): Int =
-    getGame.addPlayer(Player(id, name, secretWord))
+  def addPlayer(name: String, secretWord: String): Int = {
+    gameState match {
+      case AddPlayer(0) =>
+        gameState = AddPlayer(1)
+        getGame.addPlayer(Player(0, name, secretWord))
 
-  def getNumber(guessedWord: String, secretHolderId: Int): Option[Int] = game match {
-    case None => {
+      case AddPlayer(1) =>
+        gameState = NextPlayer(0)
+        getGame.addPlayer(Player(1, name, secretWord))
+
+    }
+  }
+
+  def nextPlayer: Int = {
+    gameState = gameState match {
+      case NextPlayer(0) => NextPlayer(1)
+      case NextPlayer(1) => NextPlayer(0)
+    }
+    gameState.playerId
+  }
+
+  def guess(guesserId: Int, word: String, guesseeId: Int): Option[Answer] = game match {
+    case None =>
       newGame
       None
-    }
+
     case Some(game) =>
-      Some(game.getNumber(guessedWord, secretHolderId))
+      if (gameState == NextPlayer(guesserId)) {
+        nextPlayer
+        Some(Answer(
+          guesserId,
+          game.guess(word, guesseeId),
+          gameState))
+      } else None
   }
 
 }
