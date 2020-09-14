@@ -24,8 +24,8 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     Ok(views.html.index())
   }
 
-  def getNumber = Action {
-    val number: Int = SecretWord.number
+  def getNumber(guessedWord: String) = Action {
+    val number: Int = SecretWord.getNumber(guessedWord)
     Ok(Json.toJson(number))
   }
 }

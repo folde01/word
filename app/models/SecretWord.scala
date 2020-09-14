@@ -1,8 +1,12 @@
 package models
 
-case class SecretWord(word: String)
+case class SecretWord(secretWord: String) {
+  def getNumber(guessedWord: String): Int =
+    secretWord.toSeq.intersect(guessedWord).unwrap.length
+}
 
 object SecretWord {
-  val word = "duck"
-  val number = 3
+  val secretWord = SecretWord("duck")
+
+  def getNumber(guessedWord: String) = secretWord.getNumber(guessedWord)
 }
