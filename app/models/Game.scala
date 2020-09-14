@@ -19,18 +19,22 @@ case class Game() {
 
 object Game {
 
-//  var game: Option[Game] = None
-  var game: Game = null
+  private var game: Option[Game] = None
 
-  def newGame: Game = {
-    game = Game()
+  def newGame: Option[Game] = {
+    game = Some(Game())
     game
   }
 
+  private def getGame: Game = game match {
+    case None => newGame.get
+    case Some(_) => game.get
+  }
+
   def addPlayer(id: Int, name: String, secretWord: String): Int =
-    game.addPlayer(Player(id, name, secretWord))
+    getGame.addPlayer(Player(id, name, secretWord))
 
   def getNumber(guessedWord: String, secretHolderId: Int) =
-    game.getNumber(guessedWord, secretHolderId)
+    getGame.getNumber(guessedWord, secretHolderId)
 
 }

@@ -25,7 +25,7 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
   }
 
   def newGame = Action {
-    val result: Game = Game.newGame
+    Game.newGame
     Ok(Json.toJson("new game"))
   }
 
