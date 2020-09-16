@@ -32,6 +32,7 @@ object Game {
   def getGameState: GameState = gameState
 
   def newGame: Option[Game] = {
+    gameState = AddPlayer(0)
     game = Some(Game())
     game
   }
@@ -69,10 +70,16 @@ object Game {
 
     case Some(game) =>
       if (gameState == NextPlayer(guesserId)) {
-        nextPlayer
+        val numberOfMatchingLetters: Int = game.guess(word, guesseeId)
+
+        if (numberOfMatchingLetters == 4)
+          gameState = PlayerWon(guesserId)
+        else
+          nextPlayer
+
         Some(Answer(
           guesserId,
-          game.guess(word, guesseeId),
+          numberOfMatchingLetters,
           gameState))
       } else None
   }

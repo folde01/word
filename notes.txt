@@ -1,0 +1,18 @@
+tests
+
+addPlayer when state is NextPlayer should return gameState NextPlayer... now it gets [MatchError: NextPlayer(0) (of class models.NextPlayer)]
+
+Anything you do wrong should give you gameState so you know what to do
+
+curls
+
+curl 'http://localhost:9000/newGame'
+"AddPlayer(0)"
+
+curl 'http://localhost:9000/addPlayer?id=0&name=jo&secretWord=grab'
+"AddPlayer(1)"
+
+curl 'http://localhost:9000/addPlayer?id=1&name=al&secretWord=luck'
+
+
+
