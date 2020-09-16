@@ -13,6 +13,23 @@ curl 'http://localhost:9000/addPlayer?id=0&name=jo&secretWord=grab'
 "AddPlayer(1)"
 
 curl 'http://localhost:9000/addPlayer?id=1&name=al&secretWord=luck'
+"NextPlayer(0)"
+
+curl 'http://localhost:9000/guess?guesserId=1&word=crab&guesseeId=0'
+"Wrong game state"
+
+curl 'http://localhost:9000/guess?guesserId=0&word=crab&guesseeId=1'
+"Answer(0,1,NextPlayer(1))"
+
+curl 'http://localhost:9000/guess?guesserId=1&word=crab&guesseeId=0'
+"Answer(1,3,NextPlayer(0))"
+
+curl 'http://localhost:9000/guess?guesserId=0&word=luck&guesseeId=1'
+"Answer(0,4,PlayerWon(0))"
+
+curl 'http://localhost:9000/gameState'
+"PlayerWon(0)"
+
 
 
 
