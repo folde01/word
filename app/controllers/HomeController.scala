@@ -43,5 +43,8 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     Ok(Json.toJson(Game.getGameState.toString))
   }
 
+  def gameState: Action[AnyContent] = Action {
+    Ok(Json.toJson(Game.getGameState.toString))
+  }
 
 }

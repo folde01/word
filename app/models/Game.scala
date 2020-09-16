@@ -1,11 +1,17 @@
 package models
 
+import scala.collection.immutable.WrappedString
 import scala.collection.mutable.ListBuffer
 
 case class Game() {
 
   def guess(word: String, guesseeId: Int): Int = {
-    players(guesseeId).secretWord.toSeq.intersect(word).unwrap.length
+    players(guesseeId)
+      .secretWord
+      .toSeq
+      .intersect(word)
+      .unwrap
+      .length
   }
 
   private var players: ListBuffer[Player] = ListBuffer.empty
