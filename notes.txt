@@ -1,8 +1,6 @@
 # stories
 
-addPlayer when state is NextPlayer should return gameState NextPlayer... now it gets [MatchError: NextPlayer(0) (of class models.NextPlayer)]
-
-Anything you do wrong should give you gameState so you know what to do
+Anything you do wrong should give you gameState so you know what to do, eg wrong player goes.
 
 / route should give you the UI where it asks for user 1, user 2, lets user 1 guess, then 2, then 1... until someone wins or exits.
 

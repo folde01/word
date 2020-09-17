@@ -34,13 +34,12 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
 
     Ok(Json.toJson(result match {
       case Some(answer) => answer.toString
-      case None => "Wrong game state"
+      case None => Game.getGameState.toString
     }))
   }
 
   def addPlayer(name: String, secretWord: String): Action[AnyContent] = Action {
     val result: GameState = Game.addPlayer(name, secretWord)
-    //    Ok(Json.toJson(Game.getGameState.toString))
     Ok(Json.toJson(result.toString))
   }
 
