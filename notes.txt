@@ -1,10 +1,18 @@
-tests
+# stories
 
 addPlayer when state is NextPlayer should return gameState NextPlayer... now it gets [MatchError: NextPlayer(0) (of class models.NextPlayer)]
 
 Anything you do wrong should give you gameState so you know what to do
 
-curls
+/ route should give you the UI where it asks for user 1, user 2, lets user 1 guess, then 2, then 1... until someone wins or exits.
+
+# future stories
+
+player1 goes to site, registers, logs in, sees player2 would like a game, asks for a game, and plays with player2. 
+
+player should be able to challenge the existence of the guessed word... or the game just checks and rejects it. should you lose your turn if it's rejected? or should that be a preference?
+
+# curls
 
 curl 'http://localhost:9000/newGame'
 "AddPlayer(0)"

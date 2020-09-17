@@ -1,7 +1,7 @@
 package controllers
 
 import javax.inject._
-import models.{Answer, Game}
+import models.{Answer, Game, GameState}
 import play.api._
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -39,8 +39,9 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
   }
 
   def addPlayer(name: String, secretWord: String): Action[AnyContent] = Action {
-    val result: Int = Game.addPlayer(name, secretWord)
-    Ok(Json.toJson(Game.getGameState.toString))
+    val result: GameState = Game.addPlayer(name, secretWord)
+    //    Ok(Json.toJson(Game.getGameState.toString))
+    Ok(Json.toJson(result.toString))
   }
 
   def gameState: Action[AnyContent] = Action {
