@@ -5,7 +5,13 @@
 
 # Web 1.0 client
 GET     /                           controllers.HomeController.index
+GET     /addPlayer0                 controllers.HomeController.addPlayer0(name: String, secretWord: String)
+GET     /addPlayer1Form             controllers.HomeController.addPlayer1Form
 GET     /addPlayer1                 controllers.HomeController.addPlayer1(name: String, secretWord: String)
+GET     /player0turnForm             controllers.HomeController.player0turnForm
+GET     /player0turn                 controllers.HomeController.player0turn(word: String)
+GET     /player1turnForm             controllers.HomeController.player1turnForm
+GET     /player1turn                 controllers.HomeController.player1turn(word: String)
 
 
 # JSON API
