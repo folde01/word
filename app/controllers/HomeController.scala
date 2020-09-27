@@ -24,14 +24,16 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     Game.newGame
     val playerId: Int = 0
     val heading: String = s"Welcome to Word - add player ${playerId}"
-    Ok(views.html.index(playerId)(heading))
+    val nextPage: String = "addPlayer1"
+    Ok(views.html.index(playerId)(heading)(nextPage))
   }
 
   def addPlayer1(player0name: String, player0secretWord: String): Action[AnyContent] = Action {
     val result: GameState = Game.addPlayer(player0name, player0secretWord)
     val playerId: Int = 1
     val heading: String = s"Add player ${playerId}"
-    Ok(views.html.index(playerId)(heading))
+    val nextPage: String = "takeTurn"
+    Ok(views.html.index(playerId)(heading)(nextPage))
   }
 
 

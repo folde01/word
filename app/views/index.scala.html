@@ -1,9 +1,9 @@
-@(playerId: Int)(heading: String)
+@(playerId: Int)(heading: String)(nextPage: String)
 
 @main("Word") {
   <h1>@heading</h1>
 
-<form method="get" action="addPlayer1">
+<form method="get" action="@nextPage">
     Player @playerId: <input type="text" name="name"></input>
     Secret word: <input type="text" name="secretWord"></input>
     <input type="submit"></input>
