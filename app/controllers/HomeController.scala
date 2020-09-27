@@ -47,22 +47,15 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
 
   def playerTurnForm(playerId: Int): Action[AnyContent] = Action {
     val heading: String = s"Player ${playerId}'s turn"
-    val action: String = s"/player${playerId}turn"
+    val action: String = s"/playerTurn/${playerId}"
     Ok(views.html.guess(playerId)(heading)(action))
   }
 
-  def player0turn(word: String): Action[AnyContent] = Action {
-    val guesserId: Int = 0
-    val guesseeId: Int = 1
+  def playerTurn(playerId: Int, word: String): Action[AnyContent] = Action {
+    val guesserId: Int = playerId
+    val guesseeId: Int = if (guesserId == 0) 1 else 0
     val result: Option[Answer] = Game.guess(guesserId, word, guesseeId)
-    Redirect("/playerTurnForm/1")
-  }
-
-  def player1turn(word: String): Action[AnyContent] = Action {
-    val guesserId: Int = 1
-    val guesseeId: Int = 0
-    val result: Option[Answer] = Game.guess(guesserId, word, guesseeId)
-    Redirect("/playerTurnForm/0")
+    Redirect(s"/playerTurnForm/${guesseeId}")
   }
 
 //  JSON API
