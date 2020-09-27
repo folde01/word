@@ -23,13 +23,15 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
   def index(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     Game.newGame
     val playerId: Int = 0
-    Ok(views.html.index(playerId))
+    val heading: String = s"Welcome to Word - add player ${playerId}"
+    Ok(views.html.index(playerId)(heading))
   }
 
   def addPlayer1(player0name: String, player0secretWord: String): Action[AnyContent] = Action {
     val result: GameState = Game.addPlayer(player0name, player0secretWord)
     val playerId: Int = 1
-    Ok(views.html.index(playerId))
+    val heading: String = s"Add player ${playerId}"
+    Ok(views.html.index(playerId)(heading))
   }
 
 

@@ -3,9 +3,12 @@
 # https://www.playframework.com/documentation/latest/ScalaRouting
 # ~~~~
 
-# An example controller showing a sample home page
+# Web 1.0 client
 GET     /                           controllers.HomeController.index
 GET     /addPlayer1                 controllers.HomeController.addPlayer1(name: String, secretWord: String)
+
+
+# JSON API
 GET     /newGame                    controllers.HomeController.newGame
 GET     /addPlayer                  controllers.HomeController.addPlayer(name: String, secretWord: String)
 GET     /guess                      controllers.HomeController.guess(guesserId: Int, word: String, guesseeId: Int)
