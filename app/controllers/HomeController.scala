@@ -53,8 +53,10 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
 
   def playerTurn(playerId: Int, word: String): Action[AnyContent] = Action {
     val guesserId: Int = playerId
-    val guesseeId: Int = if (guesserId == 0) 1 else 0
-    val result: Option[Answer] = Game.guess(guesserId, word, guesseeId)
+    val guesseeId: Int =
+      if (guesserId == 0) 1 else 0
+    val result: Option[Answer] =
+      Game.guess(guesserId, word, guesseeId)
     Redirect(s"/playerTurnForm/${guesseeId}")
   }
 
