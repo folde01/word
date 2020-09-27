@@ -1,5 +1,12 @@
-@()
+@(playerId: Int)
 
-@main("Welcome to Play") {
-  <h1>Welcome to Play!</h1>
+@main("Welcome to Word") {
+  <h1>Welcome to Word!</h1>
+
+  <form method="get" action="addPlayer1">
+    Player @playerId: <input type="text" name="name"></input>
+    Secret word: <input type="text" name="secretWord"></input>
+    <input type="submit"></input>
+  </form>
+
 }

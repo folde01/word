@@ -21,8 +21,17 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
    * a path of `/`.
    */
   def index(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    Ok(views.html.index())
+    Game.newGame
+    val playerId: Int = 0
+    Ok(views.html.index(playerId))
   }
+
+  def addPlayer1(player0name: String, player0secretWord: String): Action[AnyContent] = Action {
+    val result: GameState = Game.addPlayer(player0name, player0secretWord)
+    val playerId: Int = 1
+    Ok(views.html.index(playerId))
+  }
+
 
   def newGame: Action[AnyContent] = Action {
     Game.newGame
