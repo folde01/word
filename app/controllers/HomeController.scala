@@ -27,31 +27,29 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     Game.newGame
     val playerId: Int = 0
     val heading: String = s"Welcome to Word - add player ${playerId}"
-    val action: String = "addPlayer0"
+    val action: String = "/addPlayer0"
     Ok(views.html.addPlayer(playerId)(heading)(action))
   }
+
+//  def addPlayer(playerId: Int, name: String, secretWord: String, redirectUrl: String): Action[AnyContent] = Action {
+//    val result: GameState = Game.addPlayer(playerId, name, secretWord)
+//    Redirect(redirectUrl)
+//  }
 
   def addPlayer0(name: String, secretWord: String): Action[AnyContent] = Action {
     val result: GameState = Game.addPlayer(name, secretWord)
-    Redirect("/addPlayer1Form")
+    Redirect("/addPlayerForm/1")
   }
 
-  def addPlayer1Form(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    val playerId: Int = 1
+  def addPlayerForm(playerId: Int): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     val heading: String = s"Add player ${playerId}"
-    val action: String = "addPlayer1"
+    val action: String = s"/addPlayer${playerId}"
     Ok(views.html.addPlayer(playerId)(heading)(action))
   }
 
-  def addPlayer1(name: String, secretWord: String): Action[AnyContent] = Action {
-    val result: GameState = Game.addPlayer(name, secretWord)
-    Redirect("/player0turnForm")
-  }
-
-  def player0turnForm(): Action[AnyContent] = Action {
-    val playerId: Int = 0
-    val heading: String = "Player 0's turn"
-    val action: String = "player0turn"
+  def playerTurnForm(playerId: Int): Action[AnyContent] = Action {
+    val heading: String = s"Player ${playerId}'s turn"
+    val action: String = s"/player${playerId}turn"
     Ok(views.html.guess(playerId)(heading)(action))
   }
 
@@ -59,21 +57,14 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     val guesserId: Int = 0
     val guesseeId: Int = 1
     val result: Option[Answer] = Game.guess(guesserId, word, guesseeId)
-    Redirect("/player1turnForm")
-  }
-
-  def player1turnForm(): Action[AnyContent] = Action {
-    val playerId: Int = 0
-    val heading: String = "Player 1's turn"
-    val action: String = "player1turn"
-    Ok(views.html.guess(playerId)(heading)(action))
+    Redirect("/playerTurnForm/1")
   }
 
   def player1turn(word: String): Action[AnyContent] = Action {
     val guesserId: Int = 1
     val guesseeId: Int = 0
     val result: Option[Answer] = Game.guess(guesserId, word, guesseeId)
-    Redirect("/player0turnForm")
+    Redirect("/playerTurnForm/0")
   }
 
 //  JSON API
