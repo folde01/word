@@ -27,23 +27,21 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     Game.newGame
     val playerId: Int = 0
     val heading: String = s"Welcome to Word - add player ${playerId}"
-    val action: String = "/addPlayer0"
+    val action: String = "/addPlayer/0"
     Ok(views.html.addPlayer(playerId)(heading)(action))
   }
 
-//  def addPlayer(playerId: Int, name: String, secretWord: String, redirectUrl: String): Action[AnyContent] = Action {
-//    val result: GameState = Game.addPlayer(playerId, name, secretWord)
-//    Redirect(redirectUrl)
-//  }
-
-  def addPlayer0(name: String, secretWord: String): Action[AnyContent] = Action {
-    val result: GameState = Game.addPlayer(name, secretWord)
-    Redirect("/addPlayerForm/1")
+  def addPlayer(playerId: Int, name: String, secretWord: String): Action[AnyContent] = Action {
+    val result: GameState = Game.addPlayer(playerId, name, secretWord)
+    val redirectUrl: String =
+      if (playerId == 0) "/addPlayerForm/1"
+      else "/playerTurnForm/0"
+    Redirect(redirectUrl)
   }
 
   def addPlayerForm(playerId: Int): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     val heading: String = s"Add player ${playerId}"
-    val action: String = s"/addPlayer${playerId}"
+    val action: String = s"/addPlayer/${playerId}"
     Ok(views.html.addPlayer(playerId)(heading)(action))
   }
 
@@ -83,8 +81,8 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     }
   }
 
-  def addPlayer(name: String, secretWord: String): Action[AnyContent] = Action {
-    val result: GameState = Game.addPlayer(name, secretWord)
+  def addPlayerJson(playerId: Int, name: String, secretWord: String): Action[AnyContent] = Action {
+    val result: GameState = Game.addPlayer(playerId, name, secretWord)
     Ok(Json.toJson(result.toString))
   }
 

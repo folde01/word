@@ -5,18 +5,19 @@
 
 # Web 1.0 client
 GET     /                           controllers.HomeController.index
-GET     /addPlayer0                 controllers.HomeController.addPlayer0(name: String, secretWord: String)
+GET     /addPlayer/:playerId               controllers.HomeController.addPlayer(playerId: Int, name: String, secretWord: String)
+#GET     /addPlayer0                 controllers.HomeController.addPlayer0(name: String, secretWord: String)
 GET     /addPlayerForm/:playerId             controllers.HomeController.addPlayerForm(playerId: Int)
-GET     /addPlayer1                 controllers.HomeController.addPlayer1(name: String, secretWord: String)
+#GET     /addPlayer1                 controllers.HomeController.addPlayer1(name: String, secretWord: String)
 GET     /playerTurnForm/:playerId             controllers.HomeController.playerTurnForm(playerId: Int)
 GET     /player0turn                 controllers.HomeController.player0turn(word: String)
-GET     /player1turnForm             controllers.HomeController.player1turnForm
+#GET     /player1turnForm             controllers.HomeController.player1turnForm
 GET     /player1turn                 controllers.HomeController.player1turn(word: String)
 
 
 # JSON API
 GET     /newGame                    controllers.HomeController.newGame
-GET     /addPlayer                  controllers.HomeController.addPlayer(name: String, secretWord: String)
+GET     /addPlayerJson                  controllers.HomeController.addPlayer(playerId: Int, name: String, secretWord: String)
 GET     /guess                      controllers.HomeController.guess(guesserId: Int, word: String, guesseeId: Int)
 GET     /gameState                  controllers.HomeController.gameState
 

@@ -42,21 +42,24 @@ object Game {
     case Some(_) => game.get
   }
 
-  def addPlayer(name: String, secretWord: String): GameState = {
+  def addPlayer(playerId: Int, name: String, secretWord: String): GameState = {
     gameState match {
       case AddPlayer(0) =>
-        gameState = AddPlayer(1)
-        getGame.addPlayer(Player(0, name, secretWord))
-        gameState
+        if (playerId == 0) {
+          getGame.addPlayer(Player(0, name, secretWord))
+          gameState = AddPlayer(1)
+        }
 
       case AddPlayer(1) =>
-        gameState = NextPlayer(0)
-        getGame.addPlayer(Player(1, name, secretWord))
-        gameState
+        if (playerId == 0) {
+          getGame.addPlayer(Player(1, name, secretWord))
+          gameState = NextPlayer(0)
+        }
 
-      case _ => gameState
-
+      case _ =>
     }
+    gameState
+
   }
 
   def nextPlayer: Int = {
