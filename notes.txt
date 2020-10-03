@@ -1,13 +1,12 @@
 # stories
 
-user names shouldn't be the same
-
 words should have no repeating letters
-
+word should contain only letters
+word comparisons should be case insensitive
 ui shouldn't show the requested page if we're in the wrong game state
-
 if guess is correct ui should show winner and start a new game
-
+you should see all the words you've guessed
+user names shouldn't be the same
 
 # future stories
 

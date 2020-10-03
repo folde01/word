@@ -1,7 +1,22 @@
 package models
 
+import models.Word.WORD_LENGTH
+
 case class Word(value: String) {
-  val isInvalid: Boolean = !value.length.equals(Word.WORD_LENGTH)
+
+  def isInvalid: Boolean = !isValid
+
+  private def isValid: Boolean =
+    hasRightLength && hasRightNumberOfUniqueCharacters
+
+  private def hasRightLength = value.length.equals(Word.WORD_LENGTH)
+
+  private def hasRightNumberOfUniqueCharacters: Boolean = value
+    .toLowerCase
+    .toSet[Char]
+    .size
+    .equals(WORD_LENGTH)
+
 }
 
 object Word {
