@@ -1,7 +1,7 @@
 package controllers
 
 import javax.inject._
-import models.{Answer, Game, GameState}
+import models.{AddPlayer, Answer, Game, GameState, NextPlayer}
 import play.api._
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -32,11 +32,20 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
   }
 
   def addPlayer(playerId: Int, name: String, secretWord: String): Action[AnyContent] = Action {
-    val result: GameState = Game.addPlayer(playerId, name, secretWord)
-    val redirectUrl: String =
-      if (playerId == 0) "/addPlayerForm/1"
-      else "/playerTurnForm/0"
+
+//    Game.getGameState match {
+//      case AddPlayer(playerId) => ???
+//      case _ => ???
+//    }
+
+    val nextGameState: GameState = Game.addPlayer(playerId, name, secretWord)
+
+    val redirectUrl = nextGameState match {
+      case AddPlayer(n) => s"/addPlayerForm/${n}"
+      case NextPlayer(n) => s"/playerTurnForm/${n}"
+    }
     Redirect(redirectUrl)
+
   }
 
   def addPlayerForm(playerId: Int): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
