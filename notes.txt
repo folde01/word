@@ -46,7 +46,7 @@ curl 'http://localhost:9000/guess?guesserId=0&word=craaaaaaaaaaaaab&guesseeId=1'
 
     "NextPlayer(0)"
 
-curl 'http://localhost:9000/guess?guesserId=0&word=luck&guesseeId=1'
+curl 'http://localhost:9000/guess?guesserId=0&word=luCk&guesseeId=1'
 
     "Answer(0,3,NextPlayer(1))"
 

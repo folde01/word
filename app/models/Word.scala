@@ -4,18 +4,21 @@ import models.Word.WORD_LENGTH
 
 case class Word(value: String) {
 
+  def lowercasedValue: String = value.toLowerCase
+
   def matches(word: Word): Option[Boolean] =
     if (word.isInvalid)
       None
     else
-      Some(value.toLowerCase.equals(word.value.toLowerCase))
+      Some(lowercasedValue.equals(word.lowercasedValue))
 
   def lettersInCommon(word: Word): Option[Int] = {
       if (word.isInvalid)
         None
-      else Some(value
+      else Some(
+        lowercasedValue
         .toSeq
-        .intersect(word.value)
+        .intersect(word.lowercasedValue)
         .unwrap
         .length
     )
@@ -28,8 +31,8 @@ case class Word(value: String) {
 
   private def hasRightLength = value.length.equals(Word.WORD_LENGTH)
 
-  private def hasRightNumberOfUniqueCharacters: Boolean = value
-    .toLowerCase
+  private def hasRightNumberOfUniqueCharacters: Boolean =
+    lowercasedValue
     .toSet[Char]
     .size
     .equals(WORD_LENGTH)
