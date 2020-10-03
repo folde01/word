@@ -13,7 +13,7 @@ GET     /playerTurn/:playerId                 controllers.HomeController.playerT
 
 # JSON API
 GET     /newGame                    controllers.HomeController.newGame
-GET     /addPlayerJson                  controllers.HomeController.addPlayer(playerId: Int, name: String, secretWord: String)
+GET     /addPlayerJson              controllers.HomeController.addPlayerJson(playerId: Int, name: String, secretWord: String)
 GET     /guess                      controllers.HomeController.guess(guesserId: Int, word: String, guesseeId: Int)
 GET     /gameState                  controllers.HomeController.gameState
 

@@ -5,6 +5,8 @@ import scala.collection.mutable.ListBuffer
 
 case class Game() {
 
+  val WORD_LENGTH: Int = 4
+
   def guess(word: String, guesseeId: Int): Int = {
     players(guesseeId)
       .secretWord
@@ -73,6 +75,7 @@ object Game {
     gameState = gameState match {
       case NextPlayer(0) => NextPlayer(1)
       case NextPlayer(1) => NextPlayer(0)
+      case _ => gameState
     }
     gameState.playerId
   }
@@ -83,10 +86,12 @@ object Game {
       None
 
     case Some(game) =>
+      if (!word.length.equals(game.WORD_LENGTH)) None
+
       if (gameState == NextPlayer(guesserId)) {
         val numberOfMatchingLetters: Int = game.guess(word, guesseeId)
 
-        if (numberOfMatchingLetters == 4)
+        if (numberOfMatchingLetters == game.WORD_LENGTH)
           gameState = PlayerWon(guesserId)
         else
           nextPlayer

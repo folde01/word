@@ -16,10 +16,13 @@ player should be able to challenge the existence of the guessed word... or the g
 curl 'http://localhost:9000/newGame'
 "AddPlayer(0)"
 
-curl 'http://localhost:9000/addPlayer?id=0&name=jo&secretWord=grab'
+//curl 'http://localhost:9000/addPlayer?id=0&name=jo&secretWord=grab'
+curl 'http://localhost:9000/addPlayerJson?playerId=0&name=jo&secretWord=grab'
+
 "AddPlayer(1)"
 
-curl 'http://localhost:9000/addPlayer?id=1&name=al&secretWord=luck'
+//curl 'http://localhost:9000/addPlayer?id=1&name=al&secretWord=luck'
+curl 'http://localhost:9000/addPlayerJson?playerId=1&name=al&secretWord=duck'
 "NextPlayer(0)"
 
 curl 'http://localhost:9000/guess?guesserId=1&word=crab&guesseeId=0'
