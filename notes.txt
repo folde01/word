@@ -1,6 +1,5 @@
 # stories
 
-words should have no repeating letters
 word should contain only letters
 word comparisons should be case insensitive
 ui shouldn't show the requested page if we're in the wrong game state
