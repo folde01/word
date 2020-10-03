@@ -21,6 +21,10 @@ curl 'http://localhost:9000/addPlayerJson?playerId=0&name=jo&secretWord=grab'
 
     "AddPlayer(1)"
 
+curl 'http://localhost:9000/addPlayerJson?playerId=1&name=al&secretWord=dddddddddddduck'
+
+    "AddPlayer(1)"
+
 curl 'http://localhost:9000/addPlayerJson?playerId=1&name=al&secretWord=duck'
 
     "NextPlayer(0)"
@@ -41,7 +45,7 @@ curl 'http://localhost:9000/guess?guesserId=0&word=craaaaaaaaaaaaab&guesseeId=1'
 
     "NextPlayer(0)"
 
-'http://localhost:9000/guess?guesserId=0&word=luck&guesseeId=1'
+curl 'http://localhost:9000/guess?guesserId=0&word=luck&guesseeId=1'
 
     "Answer(0,3,NextPlayer(1))"
 

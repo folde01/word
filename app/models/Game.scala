@@ -26,9 +26,12 @@ case class Game() {
 
   def playerName(id: Int): String = players(id).name
 
-  def addPlayer(player: Player): Int = {
-    players += player
-    player.id
+  def addPlayer(player: Player): Option[Int] = {
+    if (player.isInvalid) None
+    else {
+      players += player
+      Some(player.id)
+    }
   }
 
 }
@@ -58,23 +61,27 @@ object Game {
   }
 
   def addPlayer(playerId: Int, name: String, secretWord: String): GameState = {
-    gameState match {
-      case AddPlayer(0) =>
-        if (playerId == 0) {
-          getGame.addPlayer(Player(0, name, secretWord))
-          gameState = AddPlayer(1)
-        }
 
-      case AddPlayer(1) =>
-        if (playerId == 1) {
-          getGame.addPlayer(Player(1, name, secretWord))
-          gameState = NextPlayer(0)
-        }
-
-      case _ =>
+    val nextGameState: GameState =  playerId match {
+        case 0 => AddPlayer(1)
+        case 1 => NextPlayer(0)
+        case _ => gameState
     }
-    gameState
 
+    gameState match {
+      case AddPlayer(n) =>
+        if (playerId.equals(n)) {
+          getGame.addPlayer(Player(n, name, secretWord)) match {
+            case None =>
+            case Some(playerId: Int) =>
+              if (playerId.equals(n))
+                gameState = nextGameState
+          }
+        }
+        gameState
+
+      case _ => gameState
+    }
   }
 
   def nextPlayer: Int = {
