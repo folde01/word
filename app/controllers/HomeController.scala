@@ -46,7 +46,7 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
   }
 
   def playerTurnForm(playerId: Int): Action[AnyContent] = Action {
-    val heading: String = s"Player ${playerId}'s turn"
+    val heading: String = s"Player ${playerId} - ${Game.playerName(playerId)}'s turn"
     val action: String = s"/playerTurn/${playerId}"
     Ok(views.html.guess(playerId)(heading)(action))
   }

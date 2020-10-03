@@ -16,6 +16,8 @@ case class Game() {
 
   private var players: ListBuffer[Player] = ListBuffer.empty
 
+  def playerName(id: Int): String = players(id).name
+
   def addPlayer(player: Player): Int = {
     players += player
     player.id
@@ -37,6 +39,11 @@ object Game {
     game
   }
 
+  def playerName(id: Int): String = game match {
+    case None =>  "UNKNOWN_PLAYER"
+    case Some(Game()) => game.get.playerName(id)
+  }
+
   private def getGame: Game = game match {
     case None => newGame.get
     case Some(_) => game.get
@@ -51,7 +58,7 @@ object Game {
         }
 
       case AddPlayer(1) =>
-        if (playerId == 0) {
+        if (playerId == 1) {
           getGame.addPlayer(Player(1, name, secretWord))
           gameState = NextPlayer(0)
         }

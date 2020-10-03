@@ -1,8 +1,9 @@
 # stories
 
-Anything you do wrong should give you gameState so you know what to do, eg wrong player goes.
+state: Anything you do at the wrong time should give you gameState so you know what to do.
 
-/ route should give you the UI where it asks for user 1, user 2, lets user 1 guess, then 2, then 1... until someone wins or exits.
+
+UI: / route should give you the UI where it asks for user 1, user 2, lets user 1 guess, then 2, then 1... until someone wins or exits.
 
 # future stories
 
@@ -37,5 +38,6 @@ curl 'http://localhost:9000/gameState'
 "PlayerWon(0)"
 
 
+# tests: test all the things
 
 
