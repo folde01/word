@@ -7,9 +7,10 @@
 GET     /                                     controllers.HomeController.index
 GET     /addPlayer/:playerId                  controllers.HomeController.addPlayer(playerId: Int, name: String, secretWord: String)
 GET     /addPlayerForm/:playerId              controllers.HomeController.addPlayerForm(playerId: Int)
-GET     /playerTurnForm/:playerId             controllers.HomeController.playerTurnForm(playerId: Int)
-GET     /playerTurn/:playerId                 controllers.HomeController.playerTurn(playerId: Int, word: String)
-GET     /result/:playerId/:word/:inCommon           controllers.HomeController.result(playerId: Int, word: String, inCommon: Int)
+GET     /playerTurnForm/:playerId                     controllers.HomeController.playerTurnForm(playerId: Int)
+GET     /playerTurn/:playerId                         controllers.HomeController.playerTurn(playerId: Int, word: String)
+GET     /result/:playerId/:word/:inCommon     controllers.HomeController.result(playerId: Int, word: String, inCommon: Int)
+GET     /win/:playerId                         controllers.HomeController.win(playerId: Int)
 
 
 # JSON API

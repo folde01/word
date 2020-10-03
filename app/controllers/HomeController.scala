@@ -1,7 +1,7 @@
 package controllers
 
 import javax.inject._
-import models.{AddPlayer, Answer, Game, GameState, NextPlayer, Word}
+import models.{AddPlayer, Answer, Game, GameState, NextPlayer, PlayerWon, Word}
 import play.api._
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -62,24 +62,45 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
 
   def playerTurn(playerId: Int, word: String): Action[AnyContent] = Action {
     val guesserId: Int = playerId
+
     val guesseeId: Int =
       if (guesserId == 0) 1 else 0
+
     val result: Option[Answer] =
       Game.guess(guesserId, Word(word), guesseeId)
-    result match {
-      case None => Redirect(s"/playerTurnForm/${playerId}")
-      case Some(Answer(id, lettersInCommon, state)) =>
-        Redirect(s"/result/${id}/${word}/${lettersInCommon}")
+
+    val redirectUrl: String = result match {
+      case None => s"/playerTurnForm/${playerId}"
+      case Some(Answer(id, lettersInCommon, state)) => {
+        state match {
+          case PlayerWon(playerId) => s"/win/${id}"
+          case _ => s"/result/${id}/${word}/${lettersInCommon}"
+        }
+      }
     }
-    //    Redirect(s"/playerTurnForm/${guesseeId}")
+
+    Redirect(redirectUrl)
   }
 
+
   def result(playerId: Int, word: String, inCommon: Int): Action[AnyContent] = Action {
-    val heading: String = s"${Game.playerName(playerId)} guessed ${word}. In common: ${inCommon}"
+    val heading: String = s"${
+      Game.playerName(playerId)
+    } guessed ${
+      word
+    }. In common: ${
+      inCommon
+    }"
     val action: String = s"/playerTurnForm/${
       if (playerId == 0) 1 else 0
     }"
     Ok(views.html.result(playerId)(heading)(action))
+  }
+
+  def win(playerId: Int): Action[AnyContent] = Action {
+    val heading: String = s"${Game.playerName(playerId)} wins!"
+    val action: String = "/"
+    Ok(views.html.win(heading)(action))
   }
 
   //  JSON API
