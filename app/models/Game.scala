@@ -7,13 +7,18 @@ case class Game() {
 
   val WORD_LENGTH: Int = 4
 
-  def guess(word: String, guesseeId: Int): Int = {
-    players(guesseeId)
-      .secretWord
-      .toSeq
-      .intersect(word)
-      .unwrap
-      .length
+  def guess(word: String, guesseeId: Int): Option[Int] = {
+
+    if (!word.length.equals(WORD_LENGTH)) None
+
+    Some(
+      players(guesseeId)
+        .secretWord
+        .toSeq
+        .intersect(word)
+        .unwrap
+        .length
+    )
   }
 
   private var players: ListBuffer[Player] = ListBuffer.empty
@@ -42,7 +47,7 @@ object Game {
   }
 
   def playerName(id: Int): String = game match {
-    case None =>  "UNKNOWN_PLAYER"
+    case None => "UNKNOWN_PLAYER"
     case Some(Game()) => game.get.playerName(id)
   }
 
@@ -88,18 +93,24 @@ object Game {
     case Some(game) =>
       if (!word.length.equals(game.WORD_LENGTH)) None
 
-      if (gameState == NextPlayer(guesserId)) {
-        val numberOfMatchingLetters: Int = game.guess(word, guesseeId)
+      else if (gameState == NextPlayer(guesserId)) {
+        val numberOfMatchingLetters: Option[Int] = game.guess(word, guesseeId)
 
-        if (numberOfMatchingLetters == game.WORD_LENGTH)
-          gameState = PlayerWon(guesserId)
-        else
-          nextPlayer
+        numberOfMatchingLetters match {
+          case None => None
+          case Some(n: Int) => {
+            if (n == game.WORD_LENGTH)
+              gameState = PlayerWon(guesserId)
+            else
+              nextPlayer
 
-        Some(Answer(
-          guesserId,
-          numberOfMatchingLetters,
-          gameState))
+            Some(Answer(
+              guesserId,
+              n,
+              gameState))
+          }
+        }
+
       } else None
   }
 
