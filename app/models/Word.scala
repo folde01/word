@@ -5,10 +5,21 @@ import models.Word.WORD_LENGTH
 case class Word(value: String) {
 
   def matches(word: Word): Option[Boolean] =
-    if (word.isValid)
+    if (word.isInvalid)
       None
     else
       Some(value.toLowerCase.equals(word.value.toLowerCase))
+
+  def lettersInCommon(word: Word): Option[Int] = {
+      if (word.isInvalid)
+        None
+      else Some(value
+        .toSeq
+        .intersect(word.value)
+        .unwrap
+        .length
+    )
+  }
 
   def isInvalid: Boolean = !isValid
 
