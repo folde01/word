@@ -4,9 +4,15 @@ import models.Word.WORD_LENGTH
 
 case class Word(value: String) {
 
+  def matches(word: Word): Option[Boolean] =
+    if (word.isValid)
+      None
+    else
+      Some(value.toLowerCase.equals(word.value.toLowerCase))
+
   def isInvalid: Boolean = !isValid
 
-  private def isValid: Boolean =
+  def isValid: Boolean =
     hasRightLength && hasRightNumberOfUniqueCharacters && hasLettersOnly
 
   private def hasRightLength = value.length.equals(Word.WORD_LENGTH)
