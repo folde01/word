@@ -14,31 +14,44 @@ player should be able to challenge the existence of the guessed word... or the g
 # curls
 
 curl 'http://localhost:9000/newGame'
-"AddPlayer(0)"
 
-//curl 'http://localhost:9000/addPlayer?id=0&name=jo&secretWord=grab'
+    "AddPlayer(0)"
+
 curl 'http://localhost:9000/addPlayerJson?playerId=0&name=jo&secretWord=grab'
 
-"AddPlayer(1)"
+    "AddPlayer(1)"
 
-//curl 'http://localhost:9000/addPlayer?id=1&name=al&secretWord=luck'
 curl 'http://localhost:9000/addPlayerJson?playerId=1&name=al&secretWord=duck'
-"NextPlayer(0)"
+
+    "NextPlayer(0)"
 
 curl 'http://localhost:9000/guess?guesserId=1&word=crab&guesseeId=0'
-"Wrong game state"
+
+    "NextPlayer(0)"
 
 curl 'http://localhost:9000/guess?guesserId=0&word=crab&guesseeId=1'
-"Answer(0,1,NextPlayer(1))"
+
+    "Answer(0,1,NextPlayer(1))"
 
 curl 'http://localhost:9000/guess?guesserId=1&word=crab&guesseeId=0'
-"Answer(1,3,NextPlayer(0))"
 
-curl 'http://localhost:9000/guess?guesserId=0&word=luck&guesseeId=1'
-"Answer(0,4,PlayerWon(0))"
+    "Answer(1,3,NextPlayer(0))"
+
+curl 'http://localhost:9000/guess?guesserId=0&word=craaaaaaaaaaaaab&guesseeId=1'
+
+    "NextPlayer(0)"
+
+'http://localhost:9000/guess?guesserId=0&word=luck&guesseeId=1'
+
+    "Answer(0,3,NextPlayer(1))"
+
+curl 'http://localhost:9000/guess?guesserId=1&word=grab&guesseeId=0'
+
+    "Answer(1,4,PlayerWon(1))"
 
 curl 'http://localhost:9000/gameState'
-"PlayerWon(0)"
+
+    "PlayerWon(1)"
 
 
 # tests: test all the things
