@@ -1,15 +1,27 @@
-# stories
+# web 1.0 toy stories
 
-word comparisons should be case insensitive
+ui should reject invalid turns
+ui should show letters in common and have next player button
 ui shouldn't show the requested page if we're in the wrong game state
 if guess is correct ui should show winner and start a new game
 you should see all the words you've guessed
 user names shouldn't be the same
 
-# future stories
+# web 2.0 toy stories
+
+spa
+
+# web 2.0 two-player toy stories
+
+two local browsers talking to local server
+
+# web 2.0 two-player stories
+
+server in cloud
+
+# future version stories
 
 player1 goes to site, registers, logs in, sees player2 would like a game, asks for a game, and plays with player2. 
-
 player should be able to challenge the existence of the guessed word... or the game just checks and rejects it. should you lose your turn if it's rejected? or should that be a preference?
 
 # curls

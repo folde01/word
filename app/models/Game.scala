@@ -90,7 +90,7 @@ object Game {
       if (game.wordIsInvalid(word)) None
 
       else if (gameState == NextPlayer(guesserId)) {
-        val numberOfMatchingLetters: Option[Int] = game.guess(word, guesseeId)
+        val numberOfMatchingLetters: Option[Int] = getGame.guess(word, guesseeId)
 
         numberOfMatchingLetters match {
           case None => None
