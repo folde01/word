@@ -1,11 +1,11 @@
 # web 1.0 toy stories
 
-if guess is correct ui should show winner and start a new game
-ui should reject invalid turns
-ui should show letters in common and have next player button
+ui should tell you what happened if you made an invalid guess
+ui should tell you what happened if you added user incorrectly
+user name shouldn't be blank
 ui shouldn't show the requested page if we're in the wrong game state
 you should see all the words you've guessed
-user names shouldn't be the same
+user names should be unique
 
 # web 2.0 toy stories
 
