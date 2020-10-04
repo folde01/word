@@ -1,7 +1,5 @@
 # web 1.0 toy stories
 
-ui should alert you if you made an invalid player
-ui should alert you if you made an invalid guess
 ui should tell you what happened if you made an invalid player
 ui should tell you what happened if you made an invalid guess
 you should see all the words you've guessed

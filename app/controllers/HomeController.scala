@@ -41,15 +41,22 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     val nextGameState: GameState = Game.addPlayer(playerId, name, Word(secretWord))
 
     val redirectUrl = nextGameState match {
-      case AddPlayer(n) => s"/addPlayerForm/${n}"
+      case AddPlayer(n) => {
+        if (playerId == 0 && n == 1) s"/addPlayerForm/${n}"
+        else {
+          val msg: String = "Invalid player - try again"
+          s"/addPlayerForm/${n}/${msg}"
+        }
+      }
       case NextPlayer(n) => s"/playerTurnForm/${n}"
     }
     Redirect(redirectUrl)
 
   }
 
-  def addPlayerForm(playerId: Int): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    val heading: String = s"Add player ${playerId}"
+  def addPlayerForm(playerId: Int, msg: String): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+    val formattedMsg: String = if (!msg.isEmpty) s" - ${msg}" else ""
+    val heading: String = s"Add player ${playerId} ${formattedMsg}"
     val action: String = s"/addPlayer/${playerId}"
     Ok(views.html.addPlayer(playerId)(heading)(action))
   }
