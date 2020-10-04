@@ -11,7 +11,7 @@ GET        /addPlayerForm/:playerId/:msg                     controllers.HomeCon
 GET        /playerTurnForm/:playerId                         controllers.HomeController.playerTurnForm(playerId: Int, msg: String = "")
 GET        /playerTurnForm/:playerId/:msg                    controllers.HomeController.playerTurnForm(playerId: Int, msg: String)
 GET        /playerTurn/:playerId                             controllers.HomeController.playerTurn(playerId: Int, word: String)
-GET        /result/:playerId/:word/:inCommon/:guesses        controllers.HomeController.result(playerId: Int, word: String, inCommon: Int, guesses: String)
+GET        /result/:playerId/:word/:inCommon/:answers        controllers.HomeController.result(playerId: Int, word: String, inCommon: Int, answers: String)
 GET        /win/:playerId                                    controllers.HomeController.win(playerId: Int)
 
 

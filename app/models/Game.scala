@@ -5,10 +5,9 @@ import scala.collection.mutable.ListBuffer
 
 case class Game() {
 
-  def wordIsInvalid(word: GameWord): Boolean = word.isInvalid
+  def wordIsInvalid(word: Word): Boolean = word.isInvalid
 
-  def guess(guesserId: Int, word: GameWord, guesseeId: Int): Option[Int] = {
-    players(guesserId).addGuessedWord(word)
+  def guess(guesserId: Int, word: Word, guesseeId: Int): Option[Int] = {
     players(guesseeId).secretWord.lettersInCommon(word)
   }
 
@@ -18,6 +17,12 @@ case class Game() {
 
   def playerGuesses(id: Int): Option[String] =
     players(id).getGuessedWords match {
+      case Seq() => None
+      case s => Some(s.toString)
+    }
+
+  def playerAnswers(id: Int): Option[String] =
+    players(id).getAnswers match {
       case Seq() => None
       case s => Some(s.toString)
     }
@@ -53,12 +58,14 @@ object Game {
 
   def playerGuesses(id: Int): Option[String] = getGame.playerGuesses(id)
 
+  def playerAnswers(id: Int): Option[String] = getGame.playerAnswers(id)
+
   private def getGame: Game = game match {
     case None => newGame.get
     case Some(_) => game.get
   }
 
-  def addPlayer(playerId: Int, name: String, secretWord: GameWord): GameState = {
+  def addPlayer(playerId: Int, name: String, secretWord: Word): GameState = {
 
     val nextGameState: GameState = playerId match {
       case 0 => AddPlayer(1)
@@ -69,7 +76,7 @@ object Game {
     gameState match {
       case AddPlayer(n) =>
         if (playerId.equals(n)) {
-          getGame.addPlayer(Player(n, name, secretWord: GameWord)) match {
+          getGame.addPlayer(Player(n, name, secretWord: Word)) match {
             case None =>
             case Some(playerId: Int) =>
               if (playerId.equals(n))
@@ -91,7 +98,7 @@ object Game {
     gameState.playerId
   }
 
-  def guess(guesserId: Int, word: GameWord, guesseeId: Int): Option[Answer] = game match {
+  def guess(guesserId: Int, word: Word, guesseeId: Int): Option[Answer] = game match {
     case None =>
       newGame
       None
@@ -105,16 +112,15 @@ object Game {
         numberOfMatchingLetters match {
           case None => None
           case Some(n: Int) =>
-            if (n == GameWord.WORD_LENGTH)
+            if (n == Word.WORD_LENGTH)
               gameState = PlayerWon(guesserId)
             else {
               nextPlayer
             }
 
-            Some(Answer(
-              guesserId,
-              n,
-              gameState))
+            val answer: Answer = Answer(guesserId, word, n, gameState)
+            getGame.players(guesserId).addAnswer(answer)
+            Some(answer)
         }
 
       } else None

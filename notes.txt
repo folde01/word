@@ -9,6 +9,8 @@ user names should only have certain characters
 user names should start with a letter or number
 ui shouldn't show the requested page if we're in the wrong game state
 show player 1 and player 2 rather than 0 and 1
+ui shouldn't let a user guess the same word twice
+ui should tell the user if they guess the same word again
 
 # web 2.0 toy stories
 
