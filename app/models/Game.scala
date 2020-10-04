@@ -56,8 +56,6 @@ object Game {
     case Some(Game()) => game.get.playerName(id)
   }
 
-  def playerGuesses(id: Int): Option[String] = getGame.playerGuesses(id)
-
   def playerAnswers(id: Int): Option[String] = getGame.playerAnswers(id)
 
   private def getGame: Game = game match {
