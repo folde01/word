@@ -54,8 +54,9 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     Ok(views.html.addPlayer(playerId)(heading)(action))
   }
 
-  def playerTurnForm(playerId: Int): Action[AnyContent] = Action {
-    val heading: String = s"Player ${playerId} - ${Game.playerName(playerId)}'s turn"
+  def playerTurnForm(playerId: Int, msg: String): Action[AnyContent] = Action {
+    val formattedMsg: String = if (!msg.isEmpty) s" - ${msg}" else ""
+    val heading: String = s"Player ${playerId} - ${Game.playerName(playerId)}'s turn ${formattedMsg}"
     val action: String = s"/playerTurn/${playerId}"
     Ok(views.html.guess(playerId)(heading)(action))
   }
@@ -70,7 +71,9 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
       Game.guess(guesserId, Word(word), guesseeId)
 
     val redirectUrl: String = result match {
-      case None => s"/playerTurnForm/${playerId}"
+      case None =>
+        val msg: String = "Invalid guess - try again"
+        s"/playerTurnForm/${playerId}/${msg}"
       case Some(Answer(id, lettersInCommon, state)) => {
         state match {
           case PlayerWon(playerId) => s"/win/${id}"

@@ -50,10 +50,10 @@ object Game {
 
   def addPlayer(playerId: Int, name: String, secretWord: Word): GameState = {
 
-    val nextGameState: GameState =  playerId match {
-        case 0 => AddPlayer(1)
-        case 1 => NextPlayer(0)
-        case _ => gameState
+    val nextGameState: GameState = playerId match {
+      case 0 => AddPlayer(1)
+      case 1 => NextPlayer(0)
+      case _ => gameState
     }
 
     gameState match {
@@ -94,7 +94,7 @@ object Game {
 
         numberOfMatchingLetters match {
           case None => None
-          case Some(n: Int) => {
+          case Some(n: Int) =>
             if (n == Word.WORD_LENGTH)
               gameState = PlayerWon(guesserId)
             else
@@ -104,7 +104,6 @@ object Game {
               guesserId,
               n,
               gameState))
-          }
         }
 
       } else None
