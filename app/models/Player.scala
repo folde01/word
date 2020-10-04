@@ -1,17 +1,18 @@
 package models
 
-import scala.collection.mutable.ArrayBuffer
+import scala.collection.mutable.ListBuffer
 
-case class Player(id: Int, name: String, secretWord: Word) {
+case class Player(id: Int, name: String, secretWord: GameWord) {
   def isInvalid: Boolean = secretWord.isInvalid || name.isEmpty
 
-  private var guessedWords: ArrayBuffer[Word] = ArrayBuffer.empty
+  private var guessedWords: ListBuffer[GameWord] = ListBuffer.empty
 
-  def addGuessedWord(word: Word): Word = {
-    guessedWords :+ word
+  def addGuessedWord(word: GameWord): GameWord = {
+    guessedWords.append(word)
     word
   }
 
-//  def getGuessedWords: Seq[String] = guessedWords.toSeq.map(_.lowercasedValue)
-  def getGuessedWords: Seq[String] = Seq("guns", "luck")
+  def getGuessedWords: Seq[String] =
+    guessedWords.toSeq.map(_.lowercasedValue)
+
 }

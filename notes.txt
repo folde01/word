@@ -1,6 +1,6 @@
 # web 1.0 toy stories
 
-you should see all the words you've guessed
+you should see all the words you've guessed and letters in common
 you should see all the words your opponent guessed
 ui should tell you what happened if you made an invalid player
 ui should tell you what happened if you made an invalid guess
@@ -26,6 +26,12 @@ server in cloud
 
 player1 goes to site, registers, logs in, sees player2 would like a game, asks for a game, and plays with player2. 
 player should be able to challenge the existence of the guessed word... or the game just checks and rejects it. should you lose your turn if it's rejected? or should that be a preference?
+
+# refactoring
+
+Move state out of Game object into Game class
+
+Game object should be able to manage 2+ games, so a Game needs an ID
 
 # curls
 

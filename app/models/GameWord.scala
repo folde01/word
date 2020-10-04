@@ -1,18 +1,18 @@
 package models
 
-import models.Word.WORD_LENGTH
+import models.GameWord.WORD_LENGTH
 
-case class Word(value: String) {
+case class GameWord(value: String) {
 
   def lowercasedValue: String = value.toLowerCase
 
-  def matches(word: Word): Option[Boolean] =
+  def matches(word: GameWord): Option[Boolean] =
     if (word.isInvalid)
       None
     else
       Some(lowercasedValue.equals(word.lowercasedValue))
 
-  def lettersInCommon(word: Word): Option[Int] = {
+  def lettersInCommon(word: GameWord): Option[Int] = {
       if (word.isInvalid)
         None
       else Some(
@@ -29,7 +29,7 @@ case class Word(value: String) {
   def isValid: Boolean =
     hasRightLength && hasRightNumberOfUniqueCharacters && hasLettersOnly
 
-  private def hasRightLength = value.length.equals(Word.WORD_LENGTH)
+  private def hasRightLength = value.length.equals(GameWord.WORD_LENGTH)
 
   private def hasRightNumberOfUniqueCharacters: Boolean =
     lowercasedValue
@@ -41,6 +41,6 @@ case class Word(value: String) {
 
 }
 
-object Word {
+object GameWord {
   val WORD_LENGTH: Int = 4
 }

@@ -4,22 +4,22 @@
 # ~~~~
 
 # Web 1.0 client
-GET        /                                        controllers.HomeController.index
-GET        /addPlayer/:playerId                     controllers.HomeController.addPlayer(playerId: Int, name: String, secretWord: String)
-GET        /addPlayerForm/:playerId                 controllers.HomeController.addPlayerForm(playerId: Int, msg: String = "")
-GET        /addPlayerForm/:playerId/:msg            controllers.HomeController.addPlayerForm(playerId: Int, msg: String)
-GET        /playerTurnForm/:playerId                controllers.HomeController.playerTurnForm(playerId: Int, msg: String = "")
-GET        /playerTurnForm/:playerId/:msg           controllers.HomeController.playerTurnForm(playerId: Int, msg: String)
-GET        /playerTurn/:playerId                    controllers.HomeController.playerTurn(playerId: Int, word: String)
+GET        /                                                 controllers.HomeController.index
+GET        /addPlayer/:playerId                              controllers.HomeController.addPlayer(playerId: Int, name: String, secretWord: String)
+GET        /addPlayerForm/:playerId                          controllers.HomeController.addPlayerForm(playerId: Int, msg: String = "")
+GET        /addPlayerForm/:playerId/:msg                     controllers.HomeController.addPlayerForm(playerId: Int, msg: String)
+GET        /playerTurnForm/:playerId                         controllers.HomeController.playerTurnForm(playerId: Int, msg: String = "")
+GET        /playerTurnForm/:playerId/:msg                    controllers.HomeController.playerTurnForm(playerId: Int, msg: String)
+GET        /playerTurn/:playerId                             controllers.HomeController.playerTurn(playerId: Int, word: String)
 GET        /result/:playerId/:word/:inCommon/:guesses        controllers.HomeController.result(playerId: Int, word: String, inCommon: Int, guesses: String)
-GET        /win/:playerId                           controllers.HomeController.win(playerId: Int)
+GET        /win/:playerId                                    controllers.HomeController.win(playerId: Int)
 
 
 # JSON API
-GET        /newGame                                 controllers.HomeController.newGame
-GET        /addPlayerJson                           controllers.HomeController.addPlayerJson(playerId: Int, name: String, secretWord: String)
-GET        /guess                                   controllers.HomeController.guess(guesserId: Int, word: String, guesseeId: Int)
-GET        /gameState                               controllers.HomeController.gameState
+GET        /newGame                                          controllers.HomeController.newGame
+GET        /addPlayerJson                                    controllers.HomeController.addPlayerJson(playerId: Int, name: String, secretWord: String)
+GET        /guess                                            controllers.HomeController.guess(guesserId: Int, word: String, guesseeId: Int)
+GET        /gameState                                        controllers.HomeController.gameState
 
 # Map static resources from the /public folder to the /assets URL path
-GET        /assets/*file                            controllers.Assets.versioned(path="/public", file: Asset)
+GET        /assets/*file                                     controllers.Assets.versioned(path="/public", file: Asset)
