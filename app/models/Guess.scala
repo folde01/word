@@ -1,3 +1,3 @@
 package models
 
-case class Guess(guesserId: Int, word: String, guesseeId: Int)
+case class Guess(guesserId: Int, word: Word, guesseeId: Int)

@@ -1,10 +1,11 @@
-@(playerId: Int)(heading: String)(action: String)
+@(playerId: Int)(heading: String)(action: String)(guesses: String)
 
 @main("Word") {
-  <h1>@heading</h1>
+    <h1>@heading</h1>
+    <h2>@guesses</h2>
 
-<form method="get" action="@action">
-    <input type="submit" value="next player"></input>
-</form>
+    <form method="get" action="@action">
+        <input type="submit" value="next player"></input>
+    </form>
 
 }

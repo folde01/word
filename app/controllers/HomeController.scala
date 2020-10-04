@@ -84,7 +84,13 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
       case Some(Answer(id, lettersInCommon, state)) => {
         state match {
           case PlayerWon(playerId) => s"/win/${id}"
-          case _ => s"/result/${id}/${word}/${lettersInCommon}"
+          case _ => {
+            val guesses: String = Game.playerGuesses(playerId) match {
+              case None => ""
+              case Some(s) => s
+            }
+            s"/result/${id}/${word}/${lettersInCommon}/{$guesses}"
+          }
         }
       }
     }
@@ -93,7 +99,7 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
   }
 
 
-  def result(playerId: Int, word: String, inCommon: Int): Action[AnyContent] = Action {
+  def result(playerId: Int, word: String, inCommon: Int, guesses: String): Action[AnyContent] = Action {
     val heading: String = s"${
       Game.playerName(playerId)
     } guessed ${
@@ -104,7 +110,7 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     val action: String = s"/playerTurnForm/${
       if (playerId == 0) 1 else 0
     }"
-    Ok(views.html.result(playerId)(heading)(action))
+    Ok(views.html.result(playerId)(heading)(action)(guesses))
   }
 
   def win(playerId: Int): Action[AnyContent] = Action {

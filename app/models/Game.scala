@@ -7,12 +7,20 @@ case class Game() {
 
   def wordIsInvalid(word: Word): Boolean = word.isInvalid
 
-  def guess(word: Word, guesseeId: Int): Option[Int] =
+  def guess(guesserId: Int, word: Word, guesseeId: Int): Option[Int] = {
+    players(guesserId).addGuessedWord(word)
     players(guesseeId).secretWord.lettersInCommon(word)
+  }
 
   private var players: ListBuffer[Player] = ListBuffer.empty
 
   def playerName(id: Int): String = players(id).name
+
+  def playerGuesses(id: Int): Option[String] =
+    players(id).getGuessedWords match {
+      case Seq() => None
+      case s => Some(s.toString)
+    }
 
   def addPlayer(player: Player): Option[Int] = {
     if (player.isInvalid) None
@@ -42,6 +50,8 @@ object Game {
     case None => "UNKNOWN_PLAYER"
     case Some(Game()) => game.get.playerName(id)
   }
+
+  def playerGuesses(id: Int): Option[String] = getGame.playerGuesses(id)
 
   private def getGame: Game = game match {
     case None => newGame.get
@@ -90,15 +100,16 @@ object Game {
       if (game.wordIsInvalid(word)) None
 
       else if (gameState == NextPlayer(guesserId)) {
-        val numberOfMatchingLetters: Option[Int] = getGame.guess(word, guesseeId)
+        val numberOfMatchingLetters: Option[Int] = getGame.guess(guesserId, word, guesseeId)
 
         numberOfMatchingLetters match {
           case None => None
           case Some(n: Int) =>
             if (n == Word.WORD_LENGTH)
               gameState = PlayerWon(guesserId)
-            else
+            else {
               nextPlayer
+            }
 
             Some(Answer(
               guesserId,

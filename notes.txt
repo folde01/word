@@ -1,9 +1,9 @@
 # web 1.0 toy stories
 
-ui should tell you what happened if you made an invalid player
-ui should tell you what happened if you made an invalid guess
 you should see all the words you've guessed
 you should see all the words your opponent guessed
+ui should tell you what happened if you made an invalid player
+ui should tell you what happened if you made an invalid guess
 user names should be unique
 user names should only have certain characters
 user names should start with a letter or number
