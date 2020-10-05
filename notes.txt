@@ -31,6 +31,8 @@ player should be able to challenge the existence of the guessed word... or the g
 
 # refactoring
 
+Do we need to be using a redirect in playerTurn?
+
 Move state out of Game object into Game class
 
 Game object should be able to manage 2+ games, so a Game needs an ID

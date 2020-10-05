@@ -74,28 +74,26 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     val guesseeId: Int =
       if (guesserId == 0) 1 else 0
 
-    val result: Option[Answer] =
-      Game.guess(guesserId, Word(word), guesseeId)
-
-    val redirectUrl: String = result match {
-      case None =>
-        val msg: String = "Invalid guess - try again"
-        s"/playerTurnForm/${playerId}/${msg}"
-      case Some(Answer(id, Word(word), lettersInCommon, state)) => {
-        state match {
-          case PlayerWon(playerId) => s"/win/${id}"
-          case _ => {
-            val answers: String = Game.playerAnswers(playerId) match {
-              case None => ""
-              case Some(s) => s
+    Redirect {
+      Game.guess(guesserId, Word(word), guesseeId) match {
+        case None =>
+          val msg: String = "Invalid guess - try again"
+          s"/playerTurnForm/${playerId}/${msg}"
+        case Some(Answer(id, Word(word), lettersInCommon, state)) => {
+          state match {
+            case PlayerWon(playerId) => s"/win/${id}"
+            case _ => {
+              val answers: String = Game.playerAnswers(playerId) match {
+                case None => ""
+                case Some(s) => s
+              }
+              s"/result/${id}/${word}/${lettersInCommon}/{$answers}"
             }
-            s"/result/${id}/${word}/${lettersInCommon}/{$answers}"
           }
         }
       }
     }
 
-    Redirect(redirectUrl)
   }
 
 
@@ -146,4 +144,8 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
 
   def state: Result = Ok(Json.toJson(Game.getGameState.toString))
 
+  def getStock = Action {
+    val stock = Stock("GOOG", 650.0)
+    Ok(Json.toJson(stock))
+  }
 }
