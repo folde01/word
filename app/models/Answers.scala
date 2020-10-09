@@ -1,17 +1,16 @@
 package models
 
-case class Stock(symbol: String, price: Double)
+case class Answers(answers: Seq[Answer])
 
-object Stock {
+object Answers {
 
   import play.api.libs.json._
 
-  implicit object StockFormat extends Format[Stock] {
+  implicit object AnswersFormat extends Format[Answers] {
     // convert from JSON string to a Stock object (de-serializing from JSON)
-    override def reads(json: JsValue): JsResult[Stock] = {
-      val symbol = (json \ "symbol").as[String]
-      val price = (json \ "price").as[Double]
-      JsSuccess(Stock(symbol, price))
+    override def reads(json: JsValue): JsResult[Answers] = {
+      val answers: Seq[Answers] = (json \\ "answer").as[Answer]
+      JsSuccess(Answers(answers))
     }
 
     // convert from Stock object to JSON (serializing to JSON)

@@ -1,9 +1,9 @@
 package controllers
 
 import javax.inject._
-import models.{AddPlayer, Answer, Game, GameState, NextPlayer, PlayerWon, Word}
+import models.{AddPlayer, Answer, Game, GameState, NextPlayer, PlayerWon, Stock, TurnResult, Word}
 import play.api._
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc._
 
 /**
@@ -111,6 +111,32 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     Ok(views.html.result(playerId)(heading)(action)(answers))
   }
 
+//  def result(playerId: Int, word: String, inCommon: Int, answers: String): Action[AnyContent] = Action {
+  def resultPost: Action[AnyContent] = Action { request =>
+    val json: JsValue = request.body.asJson.get
+
+    val turnResult: TurnResult = json.as[TurnResult]
+
+    val heading: String = s"${
+      Game.playerName(playerId)
+    } guessed ${
+      word
+    }. In common: ${
+      inCommon
+    }"
+    val action: String = s"/playerTurnForm/${
+      if (playerId == 0) 1 else 0
+    }"
+    Ok(views.html.result(playerId)(heading)(action)(answers))
+  }
+
+  def saveStock = Action { request =>
+    val json = request.body.asJson.get
+    val stock = json.as[Stock]
+    println(stock)
+    Ok
+  }
+
   def win(playerId: Int): Action[AnyContent] = Action {
     val heading: String = s"${Game.playerName(playerId)} wins!"
     val action: String = "/"
@@ -148,4 +174,5 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     val stock = Stock("GOOG", 650.0)
     Ok(Json.toJson(stock))
   }
+
 }
