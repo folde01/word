@@ -59,27 +59,29 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     Ok(views.html.guess(playerId)(heading)(action))
   }
 
+  def playerTurnFormRoute(playerId: Int, msg: String = ""): Action[AnyContent] = Action {
+    playerTurnForm(playerId, msg)
+  }
+
   def playerTurn(playerId: Int, word: String): Action[AnyContent] = Action {
     val guesserId: Int = playerId
 
     val guesseeId: Int =
       if (guesserId == 0) 1 else 0
 
-    Redirect {
-      Game.guess(guesserId, Word(word), guesseeId) match {
-        case None =>
-          val msg: String = "Invalid guess - try again"
-          s"/playerTurnForm/${playerId}/${msg}"
-        case Some(Answer(id, Word(word), lettersInCommon, state)) => {
-          state match {
-            case PlayerWon(playerId) => s"/win/${id}"
-            case _ => {
-              val answers: String = Game.playerAnswers(playerId) match {
-                case None => ""
-                case Some(s) => s
-              }
-              s"/result/${id}/${word}/${lettersInCommon}/{$answers}"
+    Game.guess(guesserId, Word(word), guesseeId) match {
+      case None =>
+        val msg: String = "Invalid guess - try again"
+        playerTurnForm(playerId, msg)
+      case Some(Answer(id, Word(word), lettersInCommon, state)) => {
+        state match {
+          case PlayerWon(playerId) => win(playerId)
+          case _ => {
+            val answers: String = Game.playerAnswers(playerId) match {
+              case None => ""
+              case Some(s) => s
             }
+            result(id, word, lettersInCommon, answers)
           }
         }
       }
@@ -87,8 +89,7 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
 
   }
 
-
-  def result(playerId: Int, word: String, inCommon: Int, answers: String): Action[AnyContent] = Action {
+  def result(playerId: Int, word: String, inCommon: Int, answers: String): Result = {
     val heading: String = s"${
       Game.playerName(playerId)
     } guessed ${
@@ -102,25 +103,6 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     Ok(views.html.result(playerId)(heading)(action)(answers))
   }
 
-  //  def result(playerId: Int, word: String, inCommon: Int, answers: String): Action[AnyContent] = Action {
-  //  def resultPost: Action[AnyContent] = Action { request =>
-  //    val json: JsValue = request.body.asJson.get
-  //
-  //    val turnResult: TurnResult = json.as[TurnResult]
-  //
-  //    val heading: String = s"${
-  //      Game.playerName(playerId)
-  //    } guessed ${
-  //      word
-  //    }. In common: ${
-  //      inCommon
-  //    }"
-  //    val action: String = s"/playerTurnForm/${
-  //      if (playerId == 0) 1 else 0
-  //    }"
-  //    Ok(views.html.result(playerId)(heading)(action)(answers))
-  //  }
-
   def saveStock = Action { request =>
     val json = request.body.asJson.get
     val stock = json.as[Stock]
@@ -128,7 +110,7 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     Ok
   }
 
-  def win(playerId: Int): Action[AnyContent] = Action {
+  def win(playerId: Int): Result = {
     val heading: String = s"${Game.playerName(playerId)} wins!"
     val action: String = "/"
     Ok(views.html.win(heading)(action))
