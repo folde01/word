@@ -33,35 +33,26 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
 
   def addPlayer(playerId: Int, name: String, secretWord: String): Action[AnyContent] = Action {
 
-    //    Game.getGameState match {
-    //      case AddPlayer(playerId) => ???
-    //      case _ => ???
-    //    }
-
     val nextGameState: GameState = Game.addPlayer(playerId, name, Word(secretWord))
 
-    val redirectUrl = nextGameState match {
-      case AddPlayer(n) => {
-        if (playerId == 0 && n == 1) s"/addPlayerForm/${n}"
-        else {
-          val msg: String = "Invalid player - try again"
-          s"/addPlayerForm/${n}/${msg}"
-        }
-      }
-      case NextPlayer(n) => s"/playerTurnForm/${n}"
+    nextGameState match {
+      case AddPlayer(nextPlayerId) =>
+        if (playerId == 0 && nextPlayerId == 1)
+          addPlayerForm(nextPlayerId)
+        else
+          addPlayerForm(playerId)
+      case NextPlayer(nextPlayerId) => playerTurnForm(nextPlayerId)
     }
-    Redirect(redirectUrl)
-
   }
 
-  def addPlayerForm(playerId: Int, msg: String): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+  def addPlayerForm(playerId: Int, msg: String = ""): Result = {
     val formattedMsg: String = if (!msg.isEmpty) s" - ${msg}" else ""
     val heading: String = s"Add player ${playerId} ${formattedMsg}"
     val action: String = s"/addPlayer/${playerId}"
     Ok(views.html.addPlayer(playerId)(heading)(action))
   }
 
-  def playerTurnForm(playerId: Int, msg: String): Action[AnyContent] = Action {
+  def playerTurnForm(playerId: Int, msg: String = ""): Result = {
     val formattedMsg: String = if (!msg.isEmpty) s" - ${msg}" else ""
     val heading: String = s"Player ${playerId} - ${Game.playerName(playerId)}'s turn ${formattedMsg}"
     val action: String = s"/playerTurn/${playerId}"
@@ -111,24 +102,24 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     Ok(views.html.result(playerId)(heading)(action)(answers))
   }
 
-//  def result(playerId: Int, word: String, inCommon: Int, answers: String): Action[AnyContent] = Action {
-  def resultPost: Action[AnyContent] = Action { request =>
-    val json: JsValue = request.body.asJson.get
-
-    val turnResult: TurnResult = json.as[TurnResult]
-
-    val heading: String = s"${
-      Game.playerName(playerId)
-    } guessed ${
-      word
-    }. In common: ${
-      inCommon
-    }"
-    val action: String = s"/playerTurnForm/${
-      if (playerId == 0) 1 else 0
-    }"
-    Ok(views.html.result(playerId)(heading)(action)(answers))
-  }
+  //  def result(playerId: Int, word: String, inCommon: Int, answers: String): Action[AnyContent] = Action {
+  //  def resultPost: Action[AnyContent] = Action { request =>
+  //    val json: JsValue = request.body.asJson.get
+  //
+  //    val turnResult: TurnResult = json.as[TurnResult]
+  //
+  //    val heading: String = s"${
+  //      Game.playerName(playerId)
+  //    } guessed ${
+  //      word
+  //    }. In common: ${
+  //      inCommon
+  //    }"
+  //    val action: String = s"/playerTurnForm/${
+  //      if (playerId == 0) 1 else 0
+  //    }"
+  //    Ok(views.html.result(playerId)(heading)(action)(answers))
+  //  }
 
   def saveStock = Action { request =>
     val json = request.body.asJson.get

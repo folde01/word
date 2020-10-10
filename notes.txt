@@ -86,4 +86,20 @@ curl 'http://localhost:9000/gameState'
 
 # tests: test all the things
 
+# json
 
+
+List(Answer(0,Word(crab),1,NextPlayer(1)))
+
+{
+    "answers": [
+        {
+            "playerId": 0,
+            "word": "crab",
+            "inCommon": 1
+            "gameState": "NextPlayer(1)"
+        },
+    ]
+}
+
+or just start with [...
