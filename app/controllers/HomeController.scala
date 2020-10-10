@@ -56,7 +56,7 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     val formattedMsg: String = if (!msg.isEmpty) s" - ${msg}" else ""
     val heading: String = s"Player ${playerId} - ${Game.playerName(playerId)}'s turn ${formattedMsg}"
     val action: String = s"/playerTurn/${playerId}"
-    Ok(views.html.guess(playerId)(heading)(action))
+    Ok(views.html.guess(playerId)(heading)(action)(Game.playerAnswers(playerId)))
   }
 
   def playerTurnFormRoute(playerId: Int, msg: String = ""): Action[AnyContent] = Action {
@@ -76,20 +76,15 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
       case Some(Answer(id, Word(word), lettersInCommon, state)) => {
         state match {
           case PlayerWon(playerId) => win(playerId)
-          case _ => {
-            val answers: String = Game.playerAnswers(playerId) match {
-              case None => ""
-              case Some(s) => s
-            }
-            result(id, word, lettersInCommon, answers)
-          }
+          case _ =>
+            answer(id, word, lettersInCommon)
         }
       }
     }
 
   }
 
-  def result(playerId: Int, word: String, inCommon: Int, answers: String): Result = {
+  def answer(playerId: Int, word: String, inCommon: Int): Result = {
     val heading: String = s"${
       Game.playerName(playerId)
     } guessed ${
@@ -100,7 +95,7 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     val action: String = s"/playerTurnForm/${
       if (playerId == 0) 1 else 0
     }"
-    Ok(views.html.result(playerId)(heading)(action)(answers))
+    Ok(views.html.answer(playerId)(heading)(action))
   }
 
   def saveStock = Action { request =>

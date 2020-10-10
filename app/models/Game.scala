@@ -21,11 +21,7 @@ case class Game() {
       case s => Some(s.toString)
     }
 
-  def playerAnswers(id: Int): Option[String] =
-    players(id).getAnswers match {
-      case Seq() => None
-      case s => Some(s.toString)
-    }
+  def playerAnswers(id: Int): Seq[Answer] = players(id).getAnswers
 
   def addPlayer(player: Player): Option[Int] = {
     if (player.isInvalid) None
@@ -56,7 +52,7 @@ object Game {
     case Some(Game()) => game.get.playerName(id)
   }
 
-  def playerAnswers(id: Int): Option[String] = getGame.playerAnswers(id)
+  def playerAnswers(id: Int): Seq[Answer] = getGame.playerAnswers(id)
 
   private def getGame: Game = game match {
     case None => newGame.get
