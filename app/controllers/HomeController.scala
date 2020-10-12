@@ -97,13 +97,6 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     Ok(views.html.answer(playerId)(heading)(action))
   }
 
-  def saveStock = Action { request =>
-    val json = request.body.asJson.get
-    val stock = json.as[Stock]
-    println(stock)
-    Ok
-  }
-
   def win(playerId: Int): Result = {
     val heading: String = s"${Game.playerName(playerId)} wins!"
     val action: String = "/"
@@ -136,10 +129,5 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
   }
 
   def state: Result = Ok(Json.toJson(Game.getGameState.toString))
-
-  def getStock = Action {
-    val stock = Stock("GOOG", 650.0)
-    Ok(Json.toJson(stock))
-  }
 
 }
