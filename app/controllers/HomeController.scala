@@ -2,15 +2,20 @@ package controllers
 
 import javax.inject._
 import models._
+import play.api.data.Form
 import play.api.libs.json.Json
 import play.api.mvc._
+import views.html.helper.form
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
  * application's home page.
  */
 @Singleton
-class HomeController @Inject()(val controllerComponents: ControllerComponents) extends BaseController {
+class HomeController @Inject()(cc: MessagesControllerComponents) extends MessagesAbstractController(cc) {
+
+  import PlayerForm._
+  //class HomeController @Inject()(val controllerComponents: ControllerComponents) extends BaseController {
 
   /**
    * Create an Action to render an HTML page.
@@ -20,14 +25,83 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
    * a path of `/`.
    */
 
-  // Web 1.0 client
+  val addPlayerPostUrl = routes.HomeController.addPlayerPost()
 
-  def index(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+  def index = Action { implicit request: MessagesRequest[AnyContent] =>
     Game.newGame
     val playerId: Int = 0
     val heading: String = s"Welcome to Word - add player ${playerId}"
-    val action: String = "/addPlayer/0"
-    Ok(views.html.addPlayer(playerId, heading, action))
+    //    val action: String = "/addPlayer/0"
+    Ok(views.html.addPlayer(Some(playerId), heading, form,  addPlayerPostUrl))
+    //    Ok(views.html.addPlayer(playerId, heading, action))
+  }
+
+//  def index(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+//    Game.newGame
+//    val playerId: Int = 0
+//    val heading: String = s"Welcome to Word - add player ${playerId}"
+//    val action: String = "/addPlayer/0"
+//    Ok(views.html.addPlayer(playerId, heading, action))
+//  }
+
+  // This will be the action that handles our form post
+  def createWidget = Action { implicit request: MessagesRequest[AnyContent] =>
+    val errorFunction = { formWithErrors: Form[Data] =>
+      // This is the bad case, where the form had validation errors.
+      // Let's show the user the form again, with the errors highlighted.
+      // Note how we pass the form with errors to the template.
+      BadRequest(views.html.listWidgets(widgets.toSeq, formWithErrors, postUrl))
+    }
+
+    val successFunction = { data: Data =>
+      // This is the good case, where the form was successfully parsed as a Data object.
+      val widget = Widget(name = data.name, price = data.price)
+      widgets += widget
+      Redirect(routes.WidgetController.listWidgets()).flashing("info" -> "Widget added!")
+    }
+
+    val formValidationResult = form.bindFromRequest
+    formValidationResult.fold(errorFunction, successFunction)
+  }
+
+  def addPlayerPost = Action { implicit request: MessagesRequest[AnyContent] =>
+    val errorFunction = { formWithErrors: Form[Data] =>
+      // This is the bad case, where the form had validation errors.
+      // Let's show the user the form again, with the errors highlighted.
+      // Note how we pass the form with errors to the template.
+      val heading: String = "Player add failed"
+      BadRequest(views.html.addPlayer(None, heading, formWithErrors, addPlayerPostUrl))
+    }
+
+    val successFunction = { data: Data =>
+
+      val playerId: Int = data.playerId
+      val name: String = data.name
+      val secretWord: String = data.secretWord
+      Game.addPlayer(playerId, name, Word(secretWord))
+      redirectBasedOnGameState
+    }
+
+
+  }
+
+  def redirectBasedOnGameState: Result = {
+
+    val nextGameState: GameState = Game.getGameState
+
+    val result: Result = nextGameState match {
+      case AddPlayer(nextPlayerId) =>
+        if (playerId == 0 && nextPlayerId == 1)
+          addPlayerForm(nextPlayerId)
+        else
+          addPlayerForm(playerId)
+      case NextPlayer(nextPlayerId) => playerTurnForm(nextPlayerId)
+    }
+
+    Redirect(
+      result
+    )
+
   }
 
   def addPlayer(playerId: Int, name: String, secretWord: String): Action[AnyContent] = Action {

@@ -10,7 +10,7 @@ object PlayerForm {
    * Using a class specifically for form binding reduces the chances
    * of a parameter tampering attack and makes code clearer.
    */
-  case class Data(name: String, secretWord: String)
+  case class Data(playerId: Int, name: String, secretWord: String)
 
   /**
    * The form definition for the "create a player" form.
@@ -19,6 +19,7 @@ object PlayerForm {
    */
   val form = Form(
     mapping(
+      "playerId" -> number,
       "name" -> nonEmptyText,
       "secretWord" -> nonEmptyText
     )(Data.apply)(Data.unapply)

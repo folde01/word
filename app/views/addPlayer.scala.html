@@ -1,16 +1,36 @@
-@(playerId: Int, heading: String, action: String)
+@*//@(playerId: Int, heading: String, action: String)*@
 @*//@(widgets: Seq[Widget], form: Form[WidgetForm.Data], postUrl: Call)(implicit request: MessagesRequestHeader)*@
-@*//@(playerId: Int)(heading: String)(form: Form[PlayerForm.Data])(postUrl: Call)(implicit request: MessagesRequestHeader)*@
-
-
+@(playerId: Option[Int], heading: String, form: Form[PlayerForm.Data], postUrl: Call)(implicit request: MessagesRequestHeader)
 
 @main("Word") {
     <h1>@heading</h1>
 
-    <form method="get" action="@action">
-        Player @playerId: <input type="text" name="name"></input>
-        Secret word: <input type="text" name="secretWord"></input>
-        <input type="submit"></input>
-    </form>
+@*    <form method="get" action="@action">*@
+@*        Player @playerId: <input type="text" name="name"></input>*@
+@*        Secret word: <input type="text" name="secretWord"></input>*@
+@*        <input type="submit"></input>*@
+@*    </form>*@
 
+}
+@main("Word") {
+    <h1>@heading</h1>
+
+    @* Global errors are not tied to any particular form field *@
+    @if(form.hasGlobalErrors) {
+        @form.globalErrors.map { error: FormError =>
+            <div>
+                @error.key: @error.message
+            </div>
+        }
+    }
+
+    @helper.form(postUrl) {
+        @helper.CSRF.formField
+
+        @helper.inputText(form("name"))
+
+        @helper.inputText(form("secretWord"))
+
+        <button>Add player</button>
+    }
 }
