@@ -1,12 +1,23 @@
-@(playerId: Int)(heading: String)(action: String)
+@(playerId: Int)(heading: String)(action: String)(form: Form[Player])(implicit messages: play.api.i18n.Messages)
 
-@main("Word") {
-    <h1>@heading</h1>
+    @main("Word") {
+        <h1>@heading</h1>
 
-    <form method="get" action="@action">
-        Player @playerId: <input type="text" name="name"></input>
-        Secret word: <input type="text" name="secretWord"></input>
-        <input type="submit"></input>
-    </form>
+        <form method="get" action="@action">
+            Player @playerId: <input type="text" name="name"></input>
+            Secret word: <input type="text" name="secretWord"></input>
+            <input type="submit"></input>
+        </form>
 
-}
+        @helper.form(routes.HomeController.addPlayerPost) {
+            <h2>TODO form fields</h2>
+            <button type="submit">Create widget</button>
+        }
+
+        @helper.form(routes.HomeController.addPlayerPost) {
+            @helper.inputText(form("name"))
+            @helper.inputText(form("secretWord"))
+            <button type="submit">Create user</button>
+        }
+
+    }

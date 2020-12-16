@@ -2,6 +2,9 @@ package controllers
 
 import javax.inject._
 import models._
+import play.api.data.Form
+import play.api.data.Forms.{mapping, number, text}
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.Json
 import play.api.mvc._
 
@@ -10,7 +13,8 @@ import play.api.mvc._
  * application's home page.
  */
 @Singleton
-class HomeController @Inject()(val controllerComponents: ControllerComponents) extends BaseController {
+class HomeController @Inject()(val controllerComponents: ControllerComponents,
+                               override val messagesApi: MessagesApi) extends BaseController with I18nSupport {
 
   /**
    * Create an Action to render an HTML page.
@@ -27,7 +31,7 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     val playerId: Int = 0
     val heading: String = s"Welcome to Word - add player ${playerId}"
     val action: String = "/addPlayer/0"
-    Ok(views.html.addPlayer(playerId)(heading)(action))
+    Ok(views.html.addPlayer(playerId)(heading)(action)(HomeController.createAddPlayerForm))
   }
 
   def addPlayer(playerId: Int, name: String, secretWord: String): Action[AnyContent] = Action {
@@ -44,11 +48,13 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     }
   }
 
+  def addPlayerPost = TODO
+
   def addPlayerForm(playerId: Int, msg: String = ""): Result = {
     val formattedMsg: String = if (!msg.isEmpty) s" - ${msg}" else ""
     val heading: String = s"Add player ${playerId} ${formattedMsg}"
     val action: String = s"/addPlayer/${playerId}"
-    Ok(views.html.addPlayer(playerId)(heading)(action))
+    Ok(views.html.addPlayer(playerId)(heading)(action)(HomeController.createAddPlayerForm))
   }
 
   def playerTurnForm(playerId: Int, msg: String = ""): Result = {
@@ -130,4 +136,16 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
 
   def state: Result = Ok(Json.toJson(Game.getGameState.toString))
 
+}
+
+object HomeController {
+  val createAddPlayerForm = Form(
+    mapping(
+      "playerId" -> number,
+      "name" -> text,
+      "secretWord" -> mapping(
+        "value" -> text
+      )(Word.apply)(Word.unapply)
+    )(Player.apply)(Player.unapply)
+  )
 }
