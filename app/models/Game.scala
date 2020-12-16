@@ -106,7 +106,7 @@ object Game {
         numberOfMatchingLetters match {
           case None => None
           case Some(n: Int) =>
-            if (n == Word.WORD_LENGTH)
+            if (n == Word.WORD_LENGTH && word.value.equals(game.players(guesseeId).secretWord.value))
               gameState = PlayerWon(guesserId)
             else {
               nextPlayer

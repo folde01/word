@@ -1,4 +1,8 @@
-@(playerId: Int)(heading: String)(action: String)
+@(playerId: Int, heading: String, action: String)
+@*//@(widgets: Seq[Widget], form: Form[WidgetForm.Data], postUrl: Call)(implicit request: MessagesRequestHeader)*@
+@*//@(playerId: Int)(heading: String)(form: Form[PlayerForm.Data])(postUrl: Call)(implicit request: MessagesRequestHeader)*@
+
+
 
 @main("Word") {
     <h1>@heading</h1>

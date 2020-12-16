@@ -27,7 +27,7 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     val playerId: Int = 0
     val heading: String = s"Welcome to Word - add player ${playerId}"
     val action: String = "/addPlayer/0"
-    Ok(views.html.addPlayer(playerId)(heading)(action))
+    Ok(views.html.addPlayer(playerId, heading, action))
   }
 
   def addPlayer(playerId: Int, name: String, secretWord: String): Action[AnyContent] = Action {
@@ -48,7 +48,7 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     val formattedMsg: String = if (!msg.isEmpty) s" - ${msg}" else ""
     val heading: String = s"Add player ${playerId} ${formattedMsg}"
     val action: String = s"/addPlayer/${playerId}"
-    Ok(views.html.addPlayer(playerId)(heading)(action))
+    Ok(views.html.addPlayer(playerId, heading, action))
   }
 
   def playerTurnForm(playerId: Int, msg: String = ""): Result = {
