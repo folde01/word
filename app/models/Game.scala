@@ -23,42 +23,6 @@ case class Game() {
 
   def playerAnswers(id: Int): Seq[Answer] = players(id).getAnswers
 
-  def addPlayer(player: Player): Option[Int] = {
-    if (player.isInvalid || players.length >= 2) None
-    else {
-      players += player
-      Some(player.id)
-    }
-  }
-
-}
-
-object Game {
-
-  private var game: Option[Game] = None
-
-  private var gameState: GameState = AddPlayer(0)
-
-  def getGameState: GameState = gameState
-
-  def newGame: Option[Game] = {
-    gameState = AddPlayer(0)
-    game = Some(Game())
-    game
-  }
-
-  def playerName(id: Int): String = game match {
-    case None => "UNKNOWN_PLAYER"
-    case Some(Game()) => game.get.playerName(id)
-  }
-
-  def playerAnswers(id: Int): Seq[Answer] = getGame.playerAnswers(id)
-
-  private def getGame: Game = game match {
-    case None => newGame.get
-    case Some(_) => game.get
-  }
-
   def addPlayer(playerId: Int, name: String, secretWord: Word): GameState = {
 
     val nextGameState: GameState = playerId match {
@@ -70,7 +34,17 @@ object Game {
     gameState match {
       case AddPlayer(n) =>
         if (playerId.equals(n)) {
-          getGame.addPlayer(Player(n, name, secretWord: Word)) match {
+
+          val player: Player = Player(n, name, secretWord: Word)
+
+          val idOfAddedPlayer: Option[Int] = if (player.isInvalid || players.length >= 2)
+            None
+          else {
+            players += player
+            Some(player.id)
+          }
+
+          idOfAddedPlayer match {
             case None =>
             case Some(playerId: Int) =>
               if (playerId.equals(n))
@@ -82,6 +56,62 @@ object Game {
       case _ => gameState
     }
   }
+
+  private var gameState: GameState = AddPlayer(0)
+
+  def getGameState: GameState = gameState
+
+}
+
+object Game {
+
+//  private var game: Option[Game] = None
+
+//  private var gameState: GameState = AddPlayer(0)
+
+//  def getGameState: GameState = gameState
+
+//  def newGame: Option[Game] = {
+//    gameState = AddPlayer(0)
+//    game = Some(Game())
+//    game
+//  }
+
+//  def playerName(id: Int): String = game match {
+//    case None => "UNKNOWN_PLAYER"
+//    case Some(Game()) => game.get.playerName(id)
+//  }
+
+//  def playerAnswers(id: Int): Seq[Answer] = getGame.playerAnswers(id)
+
+//  private def getGame: Game = game match {
+//    case None => newGame.get
+//    case Some(_) => game.get
+//  }
+
+//  def addPlayer(playerId: Int, name: String, secretWord: Word): GameState = {
+//
+//    val nextGameState: GameState = playerId match {
+//      case 0 => AddPlayer(1)
+//      case 1 => NextPlayer(0)
+//      case _ => gameState
+//    }
+//
+//    gameState match {
+//      case AddPlayer(n) =>
+//        if (playerId.equals(n)) {
+//          getGame.addPlayer(Player(n, name, secretWord: Word)) match {
+//            case None =>
+//            case Some(playerId: Int) =>
+//              if (playerId.equals(n))
+//                gameState = nextGameState
+//          }
+//        }
+//        gameState
+//
+//      case _ => gameState
+//    }
+//  }
 
   def nextPlayer: Int = {
     gameState = gameState match {
