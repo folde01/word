@@ -56,15 +56,13 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
     val playerId: String = request.session.get("playerId").getOrElse("NO_ID")
     val successFunction: PlayerData => Result = {
       data: PlayerData => addPlayer(playerId.toInt, data.name, data.secretWord)
-//        Ok(s"name: ${data.name} word: ${data.secretWord} id: ${playerId}")
-//      Redirect(routes.HomeControllerPost.addPlayerPost())
     }
 
     val formValidationResult = form.bindFromRequest
     formValidationResult.fold(errorFunction, successFunction)
   }
 
-  def addPlayer(playerId: Int, name: String, secretWord: String): Result = {
+  def addPlayer(playerId: Int, name: String, secretWord: String)(implicit request: MessagesRequest[AnyContent]): Result = {
 
     val nextGameState: GameState = game.addPlayer(playerId, name, Word(secretWord))
 
@@ -78,11 +76,10 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
     }
   }
 
-  def addPlayerForm(playerId: Int, msg: String = ""): Result = {
+  def addPlayerForm(playerId: Int, msg: String = "")(implicit request: MessagesRequest[AnyContent]): Result = {
     val formattedMsg: String = if (!msg.isEmpty) s" - ${msg}" else ""
     val heading: String = s"Add player ${playerId} ${formattedMsg}"
-    val action: String = s"/addPlayer/${playerId}"
-    Ok(views.html.addPlayer(playerId)(heading)(action))
+    Ok(views.html.addPlayerPost(heading, form, postUrl))
   }
 
   def playerTurnForm(playerId: Int, msg: String = ""): Result = {
