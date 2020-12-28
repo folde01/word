@@ -41,8 +41,9 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
   def index(): Action[AnyContent] = Action { implicit request:  MessagesRequest[AnyContent] =>
     game = Game()
     val playerId: Int = 0
-    val heading: String = s"Welcome to Word - add Player One"
-    Ok(views.html.addPlayerPost(heading, form, postUrl)).withSession("playerId" -> playerId.toString)
+    val heading: String = s"Welcome to Word - add player ${playerId}"
+    Ok(views.html.addPlayerPost(heading, form, postUrl))
+      .withSession("playerId" -> playerId.toString)
   }
 
   // This will be the action that handles our form post
@@ -54,7 +55,8 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
 
     val playerId: String = request.session.get("playerId").getOrElse("NO_ID")
     val successFunction: PlayerData => Result = {
-      data: PlayerData => Ok(s"name: ${data.name} word: ${data.secretWord} id: ${playerId}")
+      data: PlayerData => addPlayer(playerId.toInt, data.name, data.secretWord)
+//        Ok(s"name: ${data.name} word: ${data.secretWord} id: ${playerId}")
 //      Redirect(routes.HomeControllerPost.addPlayerPost())
     }
 
@@ -62,7 +64,7 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
     formValidationResult.fold(errorFunction, successFunction)
   }
 
-  def addPlayer(playerId: Int, name: String, secretWord: String): Action[AnyContent] = Action {
+  def addPlayer(playerId: Int, name: String, secretWord: String): Result = {
 
     val nextGameState: GameState = game.addPlayer(playerId, name, Word(secretWord))
 
