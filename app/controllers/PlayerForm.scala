@@ -1,6 +1,7 @@
 package controllers
 
 object PlayerForm {
+
   import play.api.data.Forms._
   import play.api.data.Form
 
@@ -10,7 +11,7 @@ object PlayerForm {
    * Using a class specifically for form binding reduces the chances
    * of a parameter tampering attack and makes code clearer.
    */
-  case class Data(name: String, secretWord: String)
+  case class PlayerData(name: String, secretWord: String)
 
   /**
    * The form definition for the "create a widget" form.
@@ -21,6 +22,7 @@ object PlayerForm {
     mapping(
       "name" -> nonEmptyText,
       "secretWord" -> nonEmptyText
-    )(Data.apply)(Data.unapply)
+
+    )(PlayerData.apply)(PlayerData.unapply)
   )
 }

@@ -33,26 +33,29 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
 
   var game: Game = Game()
 
+  val postUrl = routes.HomeControllerPost.addPlayerPost()
+
+//  val playerOneId: Int = 1000
+//  val playerTwoId: Int = 1001
+
   def index(): Action[AnyContent] = Action { implicit request:  MessagesRequest[AnyContent] =>
     game = Game()
     val playerId: Int = 0
-    val heading: String = s"Welcome to Word - add player ${playerId}"
-//    val action: String = "/addPlayer/0"
-//    Ok(views.html.addPlayer(playerId)(heading)(action))
-    val postUrl = routes.HomeControllerPost.addPlayerPost()
-    Ok(views.html.addPlayerPost(playerId, heading, form, postUrl))
-//        Ok("yeah!!!!!!")
+    val heading: String = s"Welcome to Word - add Player One"
+    Ok(views.html.addPlayerPost(heading, form, postUrl)).withSession("playerId" -> playerId.toString)
   }
 
   // This will be the action that handles our form post
   def addPlayerPost(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
-    val errorFunction = { formWithErrors: Form[Data] =>
-//      BadRequest(views.html.listWidgets(widgets.toSeq, formWithErrors, postUrl))
-      BadRequest("boooo!!!")
+    val errorFunction: Form[PlayerData] => Result = {
+      formWithErrors: Form[PlayerData] =>
+        BadRequest(views.html.addPlayerPost("Uh oh!", formWithErrors, postUrl))
     }
 
-    val successFunction = { data: Data =>
-      Ok("yay!!!!")
+    val playerId: String = request.session.get("playerId").getOrElse("NO_ID")
+    val successFunction: PlayerData => Result = {
+      data: PlayerData => Ok(s"name: ${data.name} word: ${data.secretWord} id: ${playerId}")
+//      Redirect(routes.HomeControllerPost.addPlayerPost())
     }
 
     val formValidationResult = form.bindFromRequest

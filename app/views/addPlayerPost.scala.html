@@ -1,19 +1,26 @@
-@(playerId: Int, heading: String, form: Form[PlayerForm.Data], postUrl: Call)(implicit request: MessagesRequestHeader)
+@(heading: String, form: Form[PlayerForm.PlayerData], postUrl: Call)(implicit request: MessagesRequestHeader)
 
 @main("Word") {
 
 <h1>@heading</h1>
 
+@* Global errors are not tied to any particular form field *@
+@if(form.hasGlobalErrors) {
+    @form.globalErrors.map { error: FormError =>
+        <div>
+            @error.key: @error.message
+        </div>
+    }
+}
+
+
 @helper.form(postUrl) {
 @helper.CSRF.formField
-
 @helper.inputText(form("name"))
 
 @helper.inputText(form("secretWord"))
 
 <button>Done</button>
 }
-
-
 
 }
