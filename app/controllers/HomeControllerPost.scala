@@ -31,6 +31,8 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
 
   // Web 1.0 client
 
+  def log(str: String): Unit = println(s"- - - ${str} - - -")
+
   var game: Game = Game()
 
   val postUrl = routes.HomeControllerPost.addPlayerPost()
@@ -68,10 +70,13 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
 
     nextGameState match {
       case AddPlayer(nextPlayerId) =>
-        if (playerId == 0 && nextPlayerId == 1)
+        if (playerId == 0 && nextPlayerId == 1) {
+          log(s"added player ${playerId}, now add player ${nextPlayerId}")
           addPlayerForm(nextPlayerId)
-        else
+        } else {
+          log(s"now add player ${playerId}")
           addPlayerForm(playerId)
+        }
       case NextPlayer(nextPlayerId) => playerTurnForm(nextPlayerId)
     }
   }
