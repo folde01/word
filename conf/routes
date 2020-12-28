@@ -4,7 +4,8 @@
 # ~~~~
 
 # Web 1.0 client
-GET        /                                controllers.HomeController.index
+GET        /                                controllers.HomeControllerPost.index
+POST        /addPlayerPost                                controllers.HomeControllerPost.addPlayerPost
 GET        /addPlayer/:playerId             controllers.HomeController.addPlayer(playerId: Int, name: String, secretWord: String)
 GET        /playerTurn/:playerId            controllers.HomeController.playerTurn(playerId: Int, word: String)
 GET        /playerTurnForm/:playerId        controllers.HomeController.playerTurnFormRoute(playerId: Int)
