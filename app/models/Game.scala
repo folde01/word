@@ -11,10 +11,6 @@ case class Game() {
 
   def wordIsInvalid(word: Word): Boolean = word.isInvalid
 
-//  def guess(guesserId: Int, word: Word, guesseeId: Int): Option[Int] = {
-//    players(guesseeId).secretWord.lettersInCommon(word)
-//  }
-
   def guess(guesserId: Int, word: Word, guesseeId: Int): Option[Answer] = {
       if (wordIsInvalid(word))
         None
@@ -24,7 +20,7 @@ case class Game() {
         numberOfMatchingLetters match {
           case None => None
           case Some(n: Int) =>
-            if (n == Word.WORD_LENGTH)
+            if (word.value.equals(players(guesseeId).secretWord.value))
               gameState = PlayerWon(guesserId)
             else {
               nextPlayer
