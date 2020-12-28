@@ -24,7 +24,7 @@ case class Game() {
   def playerAnswers(id: Int): Seq[Answer] = players(id).getAnswers
 
   def addPlayer(player: Player): Option[Int] = {
-    if (player.isInvalid) None
+    if (player.isInvalid || players.length >= 2) None
     else {
       players += player
       Some(player.id)
