@@ -40,6 +40,7 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
 //  val playerOneId: Int = 1000
 //  val playerTwoId: Int = 1001
 
+
   def index(): Action[AnyContent] = Action { implicit request:  MessagesRequest[AnyContent] =>
     game = Game()
     val playerId: Int = 0
@@ -80,11 +81,15 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
       case NextPlayer(nextPlayerId) => playerTurnForm(nextPlayerId)
     }
   }
+  /*
+   / -> index() --id=0--> views.html.addPlayerPost -> addPlayerPost() -> addPlayer(0) ->
+  game.addPlayer(0) -> addPlayerForm(1) -> views.html.addPlayerPost(1) ->
+   */
 
   def addPlayerForm(playerId: Int, msg: String = "")(implicit request: MessagesRequest[AnyContent]): Result = {
     val formattedMsg: String = if (!msg.isEmpty) s" - ${msg}" else ""
     val heading: String = s"Add player ${playerId} ${formattedMsg}"
-    Ok(views.html.addPlayerPost(heading, form, postUrl))
+    Ok(views.html.addPlayerPost(heading, form, postUrl)).withSession("playerId" -> playerId.toString)
   }
 
   def playerTurnForm(playerId: Int, msg: String = ""): Result = {
