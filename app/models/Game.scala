@@ -5,6 +5,8 @@ import scala.collection.mutable.ListBuffer
 
 case class Game() {
 
+  def log(str: String): Unit = println(s"- - - ${str} - - -")
+
   private var gameState: GameState = AddPlayer(0)
 
   def getGameState: GameState = gameState
@@ -66,6 +68,7 @@ case class Game() {
             None
           else {
             players += player
+            log(s"added player ${player}. players: ${players}")
             Some(player.id)
           }
 

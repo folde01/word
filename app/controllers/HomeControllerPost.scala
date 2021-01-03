@@ -1,6 +1,6 @@
 package controllers
 
-import controllers.PlayerForm._
+import controllers.GuessForm._
 import javax.inject._
 import models._
 import play.api.data.Form
@@ -35,25 +35,28 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
 
   var game: Game = Game()
 
-  val postUrl = routes.HomeControllerPost.addPlayerPost()
+  val addPlayerPostUrl = routes.HomeControllerPost.addPlayerPost()
+  val guessHandlerUrl = routes.HomeControllerPost.guessHandler()
 
 //  val playerOneId: Int = 1000
 //  val playerTwoId: Int = 1001
 
 
   def index(): Action[AnyContent] = Action { implicit request:  MessagesRequest[AnyContent] =>
+    import controllers.PlayerForm._
     game = Game()
     val playerId: Int = 0
     val heading: String = s"Welcome to Word - add player ${playerId}"
-    Ok(views.html.addPlayerPost(heading, form, postUrl))
+    Ok(views.html.addPlayerPost(heading, form, addPlayerPostUrl))
       .withSession("playerId" -> playerId.toString)
   }
 
   // This will be the action that handles our form post
   def addPlayerPost(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
+    import controllers.PlayerForm._
     val errorFunction: Form[PlayerData] => Result = {
       formWithErrors: Form[PlayerData] =>
-        BadRequest(views.html.addPlayerPost("Uh oh!", formWithErrors, postUrl))
+        BadRequest(views.html.addPlayerPost("Uh oh!", formWithErrors, addPlayerPostUrl))
     }
 
     val playerId: String = request.session.get("playerId").getOrElse("NO_ID")
@@ -72,13 +75,15 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
     nextGameState match {
       case AddPlayer(nextPlayerId) =>
         if (playerId == 0 && nextPlayerId == 1) {
-          log(s"added player ${playerId}, now add player ${nextPlayerId}")
+//          log(s"added player ${playerId}, now add player ${nextPlayerId}")
           addPlayerForm(nextPlayerId)
         } else {
-          log(s"now add player ${playerId}")
+//          log(s"now add player ${playerId}")
           addPlayerForm(playerId)
         }
-      case NextPlayer(nextPlayerId) => playerTurnForm(nextPlayerId)
+      case NextPlayer(nextPlayerId) => {
+        playerTurnForm(nextPlayerId)
+      }
     }
   }
   /*
@@ -87,16 +92,17 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
    */
 
   def addPlayerForm(playerId: Int, msg: String = "")(implicit request: MessagesRequest[AnyContent]): Result = {
+    import controllers.PlayerForm._
     val formattedMsg: String = if (!msg.isEmpty) s" - ${msg}" else ""
     val heading: String = s"Add player ${playerId} ${formattedMsg}"
-    Ok(views.html.addPlayerPost(heading, form, postUrl)).withSession("playerId" -> playerId.toString)
+    Ok(views.html.addPlayerPost(heading, form, addPlayerPostUrl)).withSession("playerId" -> playerId.toString)
   }
 
-  def playerTurnForm(playerId: Int, msg: String = ""): Result = {
+  def playerTurnForm(playerId: Int, msg: String = "")(implicit request: MessagesRequest[AnyContent]): Result = {
+    import controllers.GuessForm._
     val formattedMsg: String = if (!msg.isEmpty) s" - ${msg}" else ""
     val heading: String = s"Player ${playerId} - ${game.playerName(playerId)}'s turn ${formattedMsg}"
-    val action: String = s"/playerTurn/${playerId}"
-    Ok(views.html.guess(playerId)(heading)(action)(game.playerAnswers(playerId)))
+    Ok(views.html.guessPost(heading, game.playerAnswers(playerId), form, guessHandlerUrl))
   }
 
   def playerTurnFormRoute(playerId: Int, msg: String = ""): Action[AnyContent] = Action {
