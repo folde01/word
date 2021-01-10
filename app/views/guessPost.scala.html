@@ -2,23 +2,27 @@
 
 @main("Word") {
 
-<h1>@heading</h1>
+    <h1>@heading</h1>
+    @* Global errors are not tied to any particular form field *@
+    @if(form.hasGlobalErrors) {
+        @form.globalErrors.map { error: FormError =>
+            <div>
+                @error.key: @error.message
+            </div>
+        }
+    }
 
-@* Global errors are not tied to any particular form field *@
-@if(form.hasGlobalErrors) {
-@form.globalErrors.map { error: FormError =>
-<div>
-    @error.key: @error.message
-</div>
-}
-}
+    <ul>
+    @for(answer <- answers) {
+        <li>@answer.word.lowercasedValue - @answer.lettersInCommon</li>
+    }
+    </ul>
 
+    @helper.form(postUrl) {
+        @* @helper.CSRF.formField *@
+        @helper.inputText(form("guess"))
 
-@helper.form(postUrl) {
-@* @helper.CSRF.formField *@
-@helper.inputText(form("guess"))
-
-<button>Done</button>
-}
+        <button>Done</button>
+    }
 
 }

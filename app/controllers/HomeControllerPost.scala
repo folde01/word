@@ -108,8 +108,9 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
   }
 
   def playerTurnFormAction(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
-    val playerId: String = request.session.get("playerId").getOrElse("NO_ID")
-    playerTurnForm(playerId.toInt)
+    val playerId: Int = request.session.get("playerId").getOrElse("NO_ID").toInt
+    log(s"id: ${playerId}, answers: ${game.playerAnswers(playerId)}")
+    playerTurnForm(playerId)
   }
 
   // This will be the action that handles our form post
