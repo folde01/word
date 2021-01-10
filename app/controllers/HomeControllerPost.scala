@@ -147,18 +147,16 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
 
   }
 
-  def answer(playerId: Int, word: String, inCommon: Int): Result = {
-    val heading: String = s"${
-      game.playerName(playerId)
-    } guessed ${
-      word
-    }. In common: ${
-      inCommon
-    }"
-    val action: String = s"/playerTurnForm/${
-      if (playerId == 0) 1 else 0
-    }"
-    Ok(views.html.answer(playerId)(heading)(action))
+  def answer(playerId: Int, word: String, inCommon: Int)(implicit request: MessagesRequest[AnyContent]): Result = {
+    import controllers.NextPlayerForm._
+    val name: String = game.playerName(playerId)
+    log(s"name: ${name}")
+    val heading: String = s"${name} guessed ${word}. In common: ${inCommon}"
+//    val action: String = s"/playerTurnForm/${
+//      if (playerId == 0) 1 else 0
+//    }"
+    val nextPlayerId: Int = if (playerId == 0) 1 else 0
+    Ok(views.html.answerAndNextPlayerPost(playerId, heading, nextPlayerId, form, guessHandlerUrl)).withSession("nextPlayerId" -> nextPlayerId.toString)
   }
 
   def win(playerId: Int): Result = {
