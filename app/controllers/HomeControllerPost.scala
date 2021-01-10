@@ -37,6 +37,7 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
 
   val addPlayerPostUrl = routes.HomeControllerPost.handleAddPlayerPost()
   val guessHandlerUrl = routes.HomeControllerPost.handleGuessPost()
+  val playerTurnFormUrl = routes.HomeControllerPost.playerTurnFormAction()
 
 //  val playerOneId: Int = 1000
 //  val playerTwoId: Int = 1001
@@ -56,7 +57,7 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
     import controllers.PlayerForm._
     val errorFunction: Form[PlayerData] => Result = {
       formWithErrors: Form[PlayerData] =>
-        BadRequest(views.html.addPlayerPost("Uh oh!", formWithErrors, addPlayerPostUrl))
+        BadRequest(views.html.addPlayerPost("Uh oh, bad player add!", formWithErrors, addPlayerPostUrl))
     }
 
     val playerId: String = request.session.get("playerId").getOrElse("NO_ID")
@@ -98,6 +99,7 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
     Ok(views.html.addPlayerPost(heading, form, addPlayerPostUrl)).withSession("playerId" -> playerId.toString)
   }
 
+
   def playerTurnForm(playerId: Int, msg: String = "")(implicit request: MessagesRequest[AnyContent]): Result = {
     import controllers.GuessForm._
     val formattedMsg: String = if (!msg.isEmpty) s" - ${msg}" else ""
@@ -105,12 +107,17 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
     Ok(views.html.guessPost(heading, game.playerAnswers(playerId), form, guessHandlerUrl)).withSession("playerId" -> playerId.toString)
   }
 
+  def playerTurnFormAction(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
+    val playerId: String = request.session.get("playerId").getOrElse("NO_ID")
+    playerTurnForm(playerId.toInt)
+  }
+
   // This will be the action that handles our form post
   def handleGuessPost(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
     import controllers.GuessForm._
     val errorFunction: Form[GuessData] => Result = {
       formWithErrors: Form[GuessData] =>
-        BadRequest(views.html.guessPost("Uh oh!", Seq.empty, formWithErrors, guessHandlerUrl))
+        BadRequest(views.html.guessPost("Uh oh, bad guess!", Seq.empty, formWithErrors, guessHandlerUrl))
     }
 
     val playerId: String = request.session.get("playerId").getOrElse("NO_ID")
@@ -156,7 +163,7 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
 //      if (playerId == 0) 1 else 0
 //    }"
     val nextPlayerId: Int = if (playerId == 0) 1 else 0
-    Ok(views.html.answerAndNextPlayerPost(playerId, heading, nextPlayerId, form, guessHandlerUrl)).withSession("playerId" -> nextPlayerId.toString)
+    Ok(views.html.answerAndNextPlayerPost(playerId, heading, form, playerTurnFormUrl)).withSession("playerId" -> nextPlayerId.toString)
   }
 
   def win(playerId: Int): Result = {
