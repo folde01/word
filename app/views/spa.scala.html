@@ -1,0 +1,17 @@
+@(playerId: Int)
+
+@main("Word") {
+
+<h1>Welcome to word!</h1>
+<h2>Add player @playerId</h2>
+
+@helper.form(postUrl) {
+@* @helper.CSRF.formField *@
+@helper.inputText(form("name"))
+
+@helper.inputText(form("secretWord"))
+
+<button>Done</button>
+}
+
+}
