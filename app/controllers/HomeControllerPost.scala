@@ -148,7 +148,7 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
   }
 
   def answer(playerId: Int, word: String, inCommon: Int)(implicit request: MessagesRequest[AnyContent]): Result = {
-    import controllers.NextPlayerForm._
+    import controllers.NextPlayerForm._ // can we use an empty form here if this is being passed in session?
     val name: String = game.playerName(playerId)
     log(s"name: ${name}")
     val heading: String = s"${name} guessed ${word}. In common: ${inCommon}"
@@ -156,7 +156,7 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
 //      if (playerId == 0) 1 else 0
 //    }"
     val nextPlayerId: Int = if (playerId == 0) 1 else 0
-    Ok(views.html.answerAndNextPlayerPost(playerId, heading, nextPlayerId, form, guessHandlerUrl)).withSession("nextPlayerId" -> nextPlayerId.toString)
+    Ok(views.html.answerAndNextPlayerPost(playerId, heading, nextPlayerId, form, guessHandlerUrl)).withSession("playerId" -> nextPlayerId.toString)
   }
 
   def win(playerId: Int): Result = {
