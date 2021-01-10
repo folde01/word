@@ -4,13 +4,13 @@
 # ~~~~
 
 # Web 1.0 client
-GET        /                                controllers.HomeControllerPost.index
+GET        /                                controllers.HomeControllerPost.index()
 
 + nocsrf
-POST        /addPlayerPost                                controllers.HomeControllerPost.addPlayerPost
+POST        /addPlayerPost                                controllers.HomeControllerPost.handleAddPlayerPost()
 
 + nocsrf
-POST        /handleGuessPost                                controllers.HomeControllerPost.handleGuessPost
+POST        /guessPost                                controllers.HomeControllerPost.handleGuessPost()
 
 GET        /addPlayer/:playerId             controllers.HomeController.addPlayer(playerId: Int, name: String, secretWord: String)
 GET        /playerTurn/:playerId            controllers.HomeController.playerTurn(playerId: Int, word: String)
