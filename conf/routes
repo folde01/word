@@ -9,6 +9,9 @@ GET        /                                controllers.HomeControllerPost.index
 + nocsrf
 POST        /addPlayerPost                                controllers.HomeControllerPost.addPlayerPost
 
++ nocsrf
+POST        /handleGuessPost                                controllers.HomeControllerPost.handleGuessPost
+
 GET        /addPlayer/:playerId             controllers.HomeController.addPlayer(playerId: Int, name: String, secretWord: String)
 GET        /playerTurn/:playerId            controllers.HomeController.playerTurn(playerId: Int, word: String)
 GET        /playerTurnForm/:playerId        controllers.HomeController.playerTurnFormRoute(playerId: Int)
