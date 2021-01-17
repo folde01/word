@@ -19,6 +19,13 @@ POST        /playerTurn                                controllers.HomeControlle
 #GET        /playerTurn/:playerId            controllers.HomeController.playerTurn(playerId: Int, word: String)
 #GET        /playerTurnForm/:playerId        controllers.HomeController.playerTurnFormRoute(playerId: Int)
 
+GET        /random                           controllers.HomeControllerPost.random()
+GET        /square/:n                        controllers.HomeControllerPost.square(n: Int)
+
++ nocsrf
+POST       /squarePost                       controllers.HomeControllerPost.squarePost()
+
+GET       /squareIndex                       controllers.HomeControllerPost.squareIndex()
 
 
 # JSON API

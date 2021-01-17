@@ -1,6 +1,7 @@
 package controllers
 
 import controllers.GuessForm._
+
 import javax.inject._
 import models._
 import play.api.data.Form
@@ -8,8 +9,7 @@ import play.api.libs.json.Json
 import play.api.mvc._
 import play.api.i18n._
 import play.api.data._
-
-
+import play.api.http.Writeable.wByteArray
 
 
 /**
@@ -19,7 +19,7 @@ import play.api.data._
 @Singleton
 class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends MessagesAbstractController(cc) {
 
-//class HomeControllerPost @Inject()(val controllerComponents: ControllerComponents) extends BaseController {
+  //class HomeControllerPost @Inject()(val controllerComponents: ControllerComponents) extends BaseController {
 
   /**
    * Create an Action to render an HTML page.
@@ -36,14 +36,59 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
   var game: Game = Game()
 
   val addPlayerPostUrl = routes.HomeControllerPost.handleAddPlayerPost()
+  val squarePostUrl = routes.HomeControllerPost.squarePost()
   val guessHandlerUrl = routes.HomeControllerPost.handleGuessPost()
   val playerTurnFormUrl = routes.HomeControllerPost.playerTurnFormAction()
 
-//  val playerOneId: Int = 1000
-//  val playerTwoId: Int = 1001
+  //  val playerOneId: Int = 1000
+  //  val playerTwoId: Int = 1001
 
+  def random() = Action {
+    Ok(util.Random.nextInt(100).toString)
+  }
 
-  def index(): Action[AnyContent] = Action { implicit request:  MessagesRequest[AnyContent] =>
+  def square(num: Int) = Action {
+    Ok((num * num).toString)
+  }
+
+  def squareIndex(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
+    import controllers.SquareForm._
+    log("squareIndex")
+    Ok(views.html.squarePost(form, squarePostUrl))
+  }
+
+  // This will be the action that handles our form post
+
+  def squarePost = Action { implicit request =>
+    val postVals = request.body.asFormUrlEncoded
+    postVals.map { args =>
+      val n = args("n").head
+      Ok((n.toInt * n.toInt).toString)
+    }.getOrElse(Ok("BAD THING HAPPEN"))
+  }
+
+  def squarePost2(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
+    import controllers.SquareForm._
+    log("squarePost")
+    val errorFunction: Form[SquareData] => Result = {
+      formWithErrors: Form[SquareData] =>
+        log("errorFunction")
+        BadRequest(views.html.squarePost(formWithErrors, squarePostUrl))
+    }
+
+    val successFunction: SquareData => Result = {
+      data: SquareData => {
+        log("successFunction")
+        val squared: Int = data.n.toInt * data.n.toInt
+        Ok(squared.toString)
+      }
+    }
+
+    val formValidationResult = form.bindFromRequest()
+    formValidationResult.fold(errorFunction, successFunction)
+  }
+
+  def index(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
     import controllers.PlayerForm._
     game = Game()
     val playerId: Int = 0
@@ -76,10 +121,10 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
     nextGameState match {
       case AddPlayer(nextPlayerId) =>
         if (playerId == 0 && nextPlayerId == 1) {
-//          log(s"added player ${playerId}, now add player ${nextPlayerId}")
+          //          log(s"added player ${playerId}, now add player ${nextPlayerId}")
           addPlayerForm(nextPlayerId)
         } else {
-//          log(s"now add player ${playerId}")
+          //          log(s"now add player ${playerId}")
           addPlayerForm(playerId)
         }
       case NextPlayer(nextPlayerId) => {
@@ -87,6 +132,7 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
       }
     }
   }
+
   /*
    / -> index() --id=0--> views.html.addPlayerPost -> addPlayerPost() -> addPlayer(0) ->
   game.addPlayer(0) -> addPlayerForm(1) -> views.html.addPlayerPost(1) ->
@@ -130,9 +176,9 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
     formValidationResult.fold(errorFunction, successFunction)
   }
 
-//  def playerTurnFormRoute(playerId: Int, msg: String = ""): Action[AnyContent] = Action {
-//    playerTurnForm(playerId, msg)
-//  }
+  //  def playerTurnFormRoute(playerId: Int, msg: String = ""): Action[AnyContent] = Action {
+  //    playerTurnForm(playerId, msg)
+  //  }
 
   def playerTurn(playerId: Int, word: String)(implicit request: MessagesRequest[AnyContent]): Result = {
     val guesserId: Int = playerId
@@ -160,9 +206,9 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
     val name: String = game.playerName(playerId)
     log(s"name: ${name}")
     val heading: String = s"${name} guessed ${word}. In common: ${inCommon}"
-//    val action: String = s"/playerTurnForm/${
-//      if (playerId == 0) 1 else 0
-//    }"
+    //    val action: String = s"/playerTurnForm/${
+    //      if (playerId == 0) 1 else 0
+    //    }"
     val nextPlayerId: Int = if (playerId == 0) 1 else 0
     Ok(views.html.answerAndNextPlayerPost(playerId, heading, form, playerTurnFormUrl)).withSession("playerId" -> nextPlayerId.toString)
   }

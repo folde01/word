@@ -1,0 +1,20 @@
+@(form: Form[SquareForm.SquareData], postUrl: Call)(implicit request: MessagesRequestHeader)
+
+@main("Square post") {
+
+@* Global errors are not tied to any particular form field *@
+@if(form.hasGlobalErrors) {
+    @form.globalErrors.map { error: FormError =>
+        <div>
+            @error.key: @error.message
+        </div>
+    }
+}
+
+<input id="squareMe" type="text" value="3"/>
+<p id="clickMe">click for square of above: <span id="square">9</span></p>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="@routes.Assets.versioned("javascripts/basicStuff.js")"></script>
+
+}

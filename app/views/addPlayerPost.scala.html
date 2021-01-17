@@ -4,6 +4,7 @@
 
 <h1>@heading</h1>
 
+
 @* Global errors are not tied to any particular form field *@
 @if(form.hasGlobalErrors) {
     @form.globalErrors.map { error: FormError =>
@@ -22,5 +23,6 @@
 
 <button>Done</button>
 }
+
 
 }
