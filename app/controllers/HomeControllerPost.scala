@@ -61,7 +61,8 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
   def indexAjax(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
     game = Game()
     val playerId: Int = 0
-    Ok(views.html.spa())
+
+    Ok(views.html.spa(views.html.spaWelcome()))
       .withSession("playerId" -> playerId.toString)
   }
 
@@ -72,8 +73,23 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
     postVals.map { args =>
       val playerName = args("playerName").head
       val secretWord = args("secretWord").head
-      val reply: String = s"Adding id: ${playerId}, name: ${playerName}, ${secretWord}"
-      Ok(reply)
+
+      val nextGameState: GameState = game.addPlayer(playerId, playerName, Word(secretWord))
+
+      val result: Result = nextGameState match {
+        case AddPlayer(nextPlayerId) =>
+          if (playerId == 0 && nextPlayerId == 1) {
+            //          log(s"added player ${playerId}, now add player ${nextPlayerId}")
+            addPlayerForm(nextPlayerId)
+          } else {
+            //          log(s"now add player ${playerId}")
+            addPlayerForm(playerId)
+          }
+        case NextPlayer(nextPlayerId) => {
+          playerTurnForm(nextPlayerId)
+        }
+      }
+      Ok(nextGameState.toString)
     }.getOrElse(Ok("BAD THING HAPPEN"))
   }
 
