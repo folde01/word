@@ -52,9 +52,8 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
   }
 
   def squareIndex(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
-    import controllers.SquareForm._
     log("squareIndex")
-    Ok(views.html.squarePost(form, squarePostUrl))
+    Ok(views.html.squarePost(squarePostUrl))
   }
 
   // This will be the action that handles our form post
@@ -73,7 +72,7 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
     val errorFunction: Form[SquareData] => Result = {
       formWithErrors: Form[SquareData] =>
         log("errorFunction")
-        BadRequest(views.html.squarePost(formWithErrors, squarePostUrl))
+        BadRequest(views.html.squarePost(squarePostUrl))
     }
 
     val successFunction: SquareData => Result = {

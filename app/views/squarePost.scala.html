@@ -1,15 +1,6 @@
-@(form: Form[SquareForm.SquareData], postUrl: Call)(implicit request: MessagesRequestHeader)
+@(postUrl: Call)(implicit request: MessagesRequestHeader)
 
 @main("Square post") {
-
-@* Global errors are not tied to any particular form field *@
-@if(form.hasGlobalErrors) {
-    @form.globalErrors.map { error: FormError =>
-        <div>
-            @error.key: @error.message
-        </div>
-    }
-}
 
 <input id="squareMe" type="text" value="3"/>
 <p id="clickMe">click for square of above: <span id="square">9</span></p>
