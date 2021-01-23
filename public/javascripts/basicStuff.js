@@ -1,5 +1,18 @@
 console.log("yay");
 
+$('#add-player-submit').click(function(evt) {
+    const name = $("#player-name").val();
+    console.log("name:", name)
+    const word = $("#secret-word").val();
+    console.log("word:", word)
+    const url = "apiAddPlayer";
+    console.log("url:", url);
+
+	$.post(url, { playerName: name, secretWord: word }, data => {
+	    $("#server-response").html(data);
+	});
+});
+
 $('#clickMe').click(function(evt) {
     const squareMe = $("#squareMe").val();
     console.log("squareMe:", squareMe)

@@ -6,7 +6,7 @@
 # Web 1.0 client
 GET        /                                controllers.HomeControllerPost.index()
 
-+ nocsrf
+#+ nocsrf
 POST        /addPlayerPost                                controllers.HomeControllerPost.handleAddPlayerPost()
 
 + nocsrf
@@ -23,6 +23,13 @@ POST        /playerTurn                                controllers.HomeControlle
 POST       /squarePost                       controllers.HomeControllerPost.squarePost()
 
 GET       /squareIndex                       controllers.HomeControllerPost.squareIndex()
+
+# ajax
+GET       /indexAjax                       controllers.HomeControllerPost.indexAjax()
++ nocsrf
+POST       /apiAddPlayer                       controllers.HomeControllerPost.apiAddPlayer()
+
+
 
 
 # JSON API

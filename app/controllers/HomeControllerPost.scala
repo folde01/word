@@ -58,6 +58,15 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
     }.getOrElse(Ok("BAD THING HAPPEN"))
   }
 
+  def indexAjax(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
+    game = Game()
+    Ok(views.html.spa())
+  }
+
+  def apiAddPlayer(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
+    Ok("great")
+  }
+
   def index(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
     import controllers.PlayerForm._
     game = Game()
