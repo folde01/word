@@ -60,11 +60,21 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
 
   def indexAjax(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
     game = Game()
+    val playerId: Int = 0
     Ok(views.html.spa())
+      .withSession("playerId" -> playerId.toString)
   }
 
   def apiAddPlayer(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
-    Ok("great")
+    val postVals = request.body.asFormUrlEncoded
+    val playerId: Int = request.session.get("playerId").getOrElse("NO_ID").toInt
+
+    postVals.map { args =>
+      val playerName = args("playerName").head
+      val secretWord = args("secretWord").head
+      val reply: String = s"Adding id: ${playerId}, name: ${playerName}, ${secretWord}"
+      Ok(reply)
+    }.getOrElse(Ok("BAD THING HAPPEN"))
   }
 
   def index(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>

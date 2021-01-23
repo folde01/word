@@ -5,14 +5,19 @@
 <h1 id="heading">Welcome to Word</h1>
 <h2 id="state">Add first player</h2>
 
-<input id="squareMe" type="text" value="3"/>
-<p id="clickMe">click for square of above: <span id="square">9</span></p>
+<p>
+    <label for="player-name">Player name: </label>
+    <input id="player-name" type="text"/>
+</p>
+<p>
+    <label for="secret-word">Secret word: </label>
+    <input id="secret-word" type="text" />
+</p>
+<p>
+    <button id="add-player-submit">Submit</button>
+</p>
 
-<input id="player-name" type="text" value="name"/>
-<input id="secret-word" type="text" value="secret word"/>
-<button id="add-player-submit">Done</button>
 <p id="server-response"></p>
-
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="@routes.Assets.versioned("javascripts/basicStuff.js")"></script>
