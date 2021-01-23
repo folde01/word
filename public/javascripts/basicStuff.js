@@ -9,7 +9,7 @@ $('#add-player-submit').click(function(evt) {
     console.log("url:", url);
 
 	$.post(url, { playerName: name, secretWord: word }, data => {
-	    $("#server-response").html(data);
+	    $("#contents").html(data);
 	});
 });
 

@@ -80,16 +80,18 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
         case AddPlayer(nextPlayerId) =>
           if (playerId == 0 && nextPlayerId == 1) {
             //          log(s"added player ${playerId}, now add player ${nextPlayerId}")
-            addPlayerForm(nextPlayerId)
+//            addPlayerForm(nextPlayerId)
+            Ok(views.html.spaAddSecondPlayer())
           } else {
             //          log(s"now add player ${playerId}")
-            addPlayerForm(playerId)
+//            addPlayerForm(playerId)
+            Ok("add player 1 again")
           }
         case NextPlayer(nextPlayerId) => {
-          playerTurnForm(nextPlayerId)
+          Ok("player 1's turn")
         }
       }
-      Ok(nextGameState.toString)
+      result
     }.getOrElse(Ok("BAD THING HAPPEN"))
   }
 
