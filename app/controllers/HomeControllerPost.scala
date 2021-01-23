@@ -43,14 +43,6 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
   //  val playerOneId: Int = 1000
   //  val playerTwoId: Int = 1001
 
-  def random() = Action {
-    Ok(util.Random.nextInt(100).toString)
-  }
-
-  def square(num: Int) = Action {
-    Ok((num * num).toString)
-  }
-
   def squareIndex(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
     log("squareIndex")
     Ok(views.html.squarePost(squarePostUrl))
@@ -64,27 +56,6 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
       val n = args("n").head
       Ok((n.toInt * n.toInt).toString)
     }.getOrElse(Ok("BAD THING HAPPEN"))
-  }
-
-  def squarePost2(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
-    import controllers.SquareForm._
-    log("squarePost")
-    val errorFunction: Form[SquareData] => Result = {
-      formWithErrors: Form[SquareData] =>
-        log("errorFunction")
-        BadRequest(views.html.squarePost(squarePostUrl))
-    }
-
-    val successFunction: SquareData => Result = {
-      data: SquareData => {
-        log("successFunction")
-        val squared: Int = data.n.toInt * data.n.toInt
-        Ok(squared.toString)
-      }
-    }
-
-    val formValidationResult = form.bindFromRequest()
-    formValidationResult.fold(errorFunction, successFunction)
   }
 
   def index(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
