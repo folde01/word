@@ -1,15 +1,10 @@
 package controllers
 
-import controllers.GuessForm._
-
 import javax.inject._
 import models._
 import play.api.data.Form
 import play.api.libs.json.Json
 import play.api.mvc._
-import play.api.i18n._
-import play.api.data._
-import play.api.http.Writeable.wByteArray
 import play.twirl.api.Html
 
 
@@ -73,6 +68,7 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
   def apiAddPlayer(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
     val postVals = request.body.asFormUrlEncoded
     val playerId: Int = request.session.get("playerId").getOrElse("NO_ID").toInt
+    log(s"apiAddPlayer - playerId: ${playerId}")
 
     postVals.map { args =>
       val playerName = args("playerName").head
@@ -82,19 +78,18 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
 
       val result: Result = nextGameState match {
         case AddPlayer(nextPlayerId) =>
+          log(s"apiAddPlayer - nextPlayerId: ${nextPlayerId}")
           if (playerId == 0 && nextPlayerId == 1) {
-            //          log(s"added player ${playerId}, now add player ${nextPlayerId}")
-//            addPlayerForm(nextPlayerId)
             val heading: Html = views.html.spaHeading("Woooooord", "Add second player")
             val content: Html = views.html.spaAddPlayer()
-            Ok(views.html.spa(heading, content))
+            Ok(views.html.spa(heading, content)).withSession("playerId" -> nextPlayerId.toString)
           } else {
-            //          log(s"now add player ${playerId}")
-//            addPlayerForm(playerId)
             Ok("add player 1 again")
           }
         case NextPlayer(nextPlayerId) => {
-          Ok("player 1's turn")
+          val heading: Html = views.html.spaHeading("Woooooord", "Player 1's turn")
+          val content: Html = views.html.spaPlayerTurn()
+          Ok(views.html.spa(heading, content)).withSession("playerId" -> nextPlayerId.toString)
         }
       }
       result

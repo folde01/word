@@ -69,6 +69,7 @@ case class Game() {
           else {
             players += player
             log(s"added player ${player}. players: ${players}")
+            log(s"game state: ${gameState}")
             Some(player.id)
           }
 
