@@ -1,0 +1,14 @@
+@(answers: Seq[Answer] = Seq.empty)
+
+<div id="contents">
+    <p>
+        <label for="guess">Guess: </label>
+        <input id="guess" type="text"/>
+    </p>
+    <p>
+        <button id="guess-submit">Submit</button>
+    </p>
+</div>
+
+<script src="@routes.Assets.versioned("javascripts/basicStuff.js")"></script>
+

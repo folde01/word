@@ -1,0 +1,8 @@
+@(answers: Seq[Answer])
+
+<h3>Past answers</h3>
+<ul>
+    @for(answer <- answers) {
+        <li>@answer.word.lowercasedValue - @answer.lettersInCommon</li>
+    }
+</ul>

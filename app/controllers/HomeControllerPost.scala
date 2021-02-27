@@ -88,7 +88,7 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
           }
         case NextPlayer(nextPlayerId) => {
           val heading: Html = views.html.spaHeading("Woooooord", "Player 1's turn")
-          val content: Html = views.html.spaPlayerTurn()
+          val content: Html = views.html.spaTurn()
           Ok(views.html.spa(heading, content)).withSession("playerId" -> nextPlayerId.toString)
         }
       }
