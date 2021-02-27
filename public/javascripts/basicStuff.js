@@ -1,5 +1,3 @@
-console.log("yay");
-
 $('#add-player-submit').click(function(evt) {
     const name = $("#player-name").val();
     console.log("name:", name)
@@ -9,7 +7,7 @@ $('#add-player-submit').click(function(evt) {
     console.log("url:", url);
 
 	$.post(url, { playerName: name, secretWord: word }, data => {
-	    $("#contents").html(data);
+	    $("#page").html(data);
 	});
 });
 

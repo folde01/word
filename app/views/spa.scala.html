@@ -1,12 +1,20 @@
-@(content: Html)
+@(heading: Html, content: Html)
 
 @main("Word") {
 
-<div id="content">
-    @content
-</div>
+    <div id="page">
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="@routes.Assets.versioned("javascripts/basicStuff.js")"></script>
+        <div id="heading">
+            @heading
+        </div>
+
+        <div id="content">
+            @content
+        </div>
+
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="@routes.Assets.versioned("javascripts/basicStuff.js")"></script>
 
 }

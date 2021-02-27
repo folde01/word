@@ -10,6 +10,7 @@ import play.api.mvc._
 import play.api.i18n._
 import play.api.data._
 import play.api.http.Writeable.wByteArray
+import play.twirl.api.Html
 
 
 /**
@@ -62,7 +63,10 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
     game = Game()
     val playerId: Int = 0
 
-    Ok(views.html.spa(views.html.spaWelcome()))
+    val heading: Html = views.html.spaHeading("Welcome to Woooooord", "Add first player")
+    val content: Html = views.html.spaAddPlayer()
+
+    Ok(views.html.spa(heading, content))
       .withSession("playerId" -> playerId.toString)
   }
 
@@ -81,7 +85,9 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
           if (playerId == 0 && nextPlayerId == 1) {
             //          log(s"added player ${playerId}, now add player ${nextPlayerId}")
 //            addPlayerForm(nextPlayerId)
-            Ok(views.html.spaAddSecondPlayer())
+            val heading: Html = views.html.spaHeading("Woooooord", "Add second player")
+            val content: Html = views.html.spaAddPlayer()
+            Ok(views.html.spa(heading, content))
           } else {
             //          log(s"now add player ${playerId}")
 //            addPlayerForm(playerId)
