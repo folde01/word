@@ -11,17 +11,27 @@ $('#add-player-submit').click(function(evt) {
 	});
 });
 
-$('#clickMe').click(function(evt) {
-    const squareMe = $("#squareMe").val();
-    console.log("squareMe:", squareMe)
-    const url = "squarePost";
+$('#guess-submit').click(function(evt) {
+    const name = $("#guess").val();
+    const url = "apiAddPlayer";
     console.log("url:", url);
-    const n = squareMe;
 
-	$.post(url, { n }, data => {
-	    $("#square").html(data);
+	$.post(url, { playerName: name, secretWord: word }, data => {
+	    $("#page").html(data);
 	});
 });
+
+//$('#clickMe').click(function(evt) {
+//    const squareMe = $("#squareMe").val();
+//    console.log("squareMe:", squareMe)
+//    const url = "squarePost";
+//    console.log("url:", url);
+//    const n = squareMe;
+//
+//	$.post(url, { n }, data => {
+//	    $("#square").html(data);
+//	});
+//});
 
 //    const squareMe = $("#squareMe").val();
 //    console.log("squareMe:", squareMe)

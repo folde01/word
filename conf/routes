@@ -22,12 +22,14 @@ POST        /playerTurn                                controllers.HomeControlle
 + nocsrf
 POST       /squarePost                       controllers.HomeControllerPost.squarePost()
 
-GET       /squareIndex                       controllers.HomeControllerPost.squareIndex()
+GET       /squareIndex                         controllers.HomeControllerPost.squareIndex()
 
 # ajax
-GET       /                       controllers.HomeControllerPost.indexAjax()
+GET       /                                    controllers.HomeControllerPost.indexAjax()
 + nocsrf
 POST       /apiAddPlayer                       controllers.HomeControllerPost.apiAddPlayer()
++ nocsrf
+POST       /apiTurn                       controllers.HomeControllerPost.apiAddPlayer()
 
 
 

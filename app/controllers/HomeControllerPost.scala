@@ -66,7 +66,7 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
   }
 
   def apiAddPlayer(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
-    val postVals = request.body.asFormUrlEncoded
+    val postVals: Option[Map[String, Seq[String]]] = request.body.asFormUrlEncoded
     val playerId: Int = request.session.get("playerId").getOrElse("NO_ID").toInt
     log(s"apiAddPlayer - playerId: ${playerId}")
 
@@ -96,6 +96,36 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
     }.getOrElse(Ok("BAD THING HAPPEN"))
   }
 
+  def opponentId(playerId: Int): Int = if (playerId.equals(1)) 0 else 1
+
+  def apiTurn(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
+    val postVals: Option[Map[String, Seq[String]]] = request.body.asFormUrlEncoded
+    val playerId: Int = request.session.get("playerId").getOrElse("NO_ID").toInt
+    log(s"apiTurn - playerId: ${playerId}")
+
+    postVals.map { args =>
+      val word: Word = Word(args("guess").head)
+      val nextGameState: GameState = game.guess(playerId, word, opponentId(playerId))
+
+      val result: Result = nextGameState match {
+        case AddPlayer(nextPlayerId) =>
+          log(s"apiAddPlayer - nextPlayerId: ${nextPlayerId}")
+          if (playerId == 0 && nextPlayerId == 1) {
+            val heading: Html = views.html.spaHeading("Woooooord", "Add second player")
+            val content: Html = views.html.spaAddPlayer()
+            Ok(views.html.spa(heading, content)).withSession("playerId" -> nextPlayerId.toString)
+          } else {
+            Ok("add player 1 again")
+          }
+        case NextPlayer(nextPlayerId) => {
+          val heading: Html = views.html.spaHeading("Woooooord", "Player 1's turn")
+          val content: Html = views.html.spaTurn()
+          Ok(views.html.spa(heading, content)).withSession("playerId" -> nextPlayerId.toString)
+        }
+      }
+      result
+    }.getOrElse(Ok("BAD THING HAPPEN"))
+  }
   def index(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
     import controllers.PlayerForm._
     game = Game()
@@ -120,25 +150,6 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
 
     val formValidationResult = form.bindFromRequest()
     formValidationResult.fold(errorFunction, successFunction)
-  }
-
-  def addPlayer(playerId: Int, name: String, secretWord: String)(implicit request: MessagesRequest[AnyContent]): Result = {
-
-    val nextGameState: GameState = game.addPlayer(playerId, name, Word(secretWord))
-
-    nextGameState match {
-      case AddPlayer(nextPlayerId) =>
-        if (playerId == 0 && nextPlayerId == 1) {
-          //          log(s"added player ${playerId}, now add player ${nextPlayerId}")
-          addPlayerForm(nextPlayerId)
-        } else {
-          //          log(s"now add player ${playerId}")
-          addPlayerForm(playerId)
-        }
-      case NextPlayer(nextPlayerId) => {
-        playerTurnForm(nextPlayerId)
-      }
-    }
   }
 
   /*
