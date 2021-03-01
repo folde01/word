@@ -6,8 +6,6 @@
 # Web 1.0 client
 #GET        /                                controllers.HomeControllerPost.index()
 
-#+ nocsrf
-POST        /addPlayerPost                                controllers.HomeControllerPost.handleAddPlayerPost()
 
 + nocsrf
 POST        /guessPost                                controllers.HomeControllerPost.handleGuessPost()
@@ -29,7 +27,7 @@ GET       /                                    controllers.HomeControllerPost.in
 + nocsrf
 POST       /apiAddPlayer                       controllers.HomeControllerPost.apiAddPlayer()
 + nocsrf
-POST       /apiTurn                       controllers.HomeControllerPost.apiAddPlayer()
+POST       /apiTurn                       controllers.HomeControllerPost.apiTurn()
 
 
 

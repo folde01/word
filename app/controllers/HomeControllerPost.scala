@@ -31,10 +31,10 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
 
   var game: Game = Game()
 
-  val addPlayerPostUrl = routes.HomeControllerPost.handleAddPlayerPost()
   val squarePostUrl = routes.HomeControllerPost.squarePost()
   val guessHandlerUrl = routes.HomeControllerPost.handleGuessPost()
   val playerTurnFormUrl = routes.HomeControllerPost.playerTurnFormAction()
+  val gameName: String = "Wooooooooord"
 
   //  val playerOneId: Int = 1000
   //  val playerTwoId: Int = 1001
@@ -58,7 +58,7 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
     game = Game()
     val playerId: Int = 0
 
-    val heading: Html = views.html.spaHeading("Welcome to Woooooord", "Add first player")
+    val heading: Html = views.html.spaHeading(s"Welcome to $gameName", "Add first player")
     val content: Html = views.html.spaAddPlayer()
 
     Ok(views.html.spa(heading, content))
@@ -80,14 +80,14 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
         case AddPlayer(nextPlayerId) =>
           log(s"apiAddPlayer - nextPlayerId: ${nextPlayerId}")
           if (playerId == 0 && nextPlayerId == 1) {
-            val heading: Html = views.html.spaHeading("Woooooord", "Add second player")
+            val heading: Html = views.html.spaHeading(s"$gameName", "Add second player")
             val content: Html = views.html.spaAddPlayer()
             Ok(views.html.spa(heading, content)).withSession("playerId" -> nextPlayerId.toString)
           } else {
             Ok("add player 1 again")
           }
         case NextPlayer(nextPlayerId) => {
-          val heading: Html = views.html.spaHeading("Woooooord", "Player 1's turn")
+          val heading: Html = views.html.spaHeading(s"$gameName", "Player 1's turn")
           val content: Html = views.html.spaTurn()
           Ok(views.html.spa(heading, content)).withSession("playerId" -> nextPlayerId.toString)
         }
@@ -99,70 +99,43 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
   def opponentId(playerId: Int): Int = if (playerId.equals(1)) 0 else 1
 
   def apiTurn(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
+    log("apiTurn")
     val postVals: Option[Map[String, Seq[String]]] = request.body.asFormUrlEncoded
     val playerId: Int = request.session.get("playerId").getOrElse("NO_ID").toInt
     log(s"apiTurn - playerId: ${playerId}")
 
-    postVals.map { args =>
-      val word: Word = Word(args("guess").head)
-      val nextGameState: GameState = game.guess(playerId, word, opponentId(playerId))
+    val guesserId: Int = playerId
 
-      val result: Result = nextGameState match {
-        case AddPlayer(nextPlayerId) =>
-          log(s"apiAddPlayer - nextPlayerId: ${nextPlayerId}")
-          if (playerId == 0 && nextPlayerId == 1) {
-            val heading: Html = views.html.spaHeading("Woooooord", "Add second player")
-            val content: Html = views.html.spaAddPlayer()
-            Ok(views.html.spa(heading, content)).withSession("playerId" -> nextPlayerId.toString)
-          } else {
-            Ok("add player 1 again")
-          }
-        case NextPlayer(nextPlayerId) => {
-          val heading: Html = views.html.spaHeading("Woooooord", "Player 1's turn")
+    val guesseeId: Int = if (guesserId == 0) 1 else 0
+
+    postVals.map { args =>
+
+      val wordString: String = args("guess").head
+
+      val result: Result = game.guess(guesserId, Word(wordString), guesseeId) match {
+        case None =>
+//          playerTurnForm(playerId, msg)
+          val heading: Html = views.html.spaHeading(s"$gameName", "Invalid guess - try again")
           val content: Html = views.html.spaTurn()
-          Ok(views.html.spa(heading, content)).withSession("playerId" -> nextPlayerId.toString)
+          Ok(views.html.spa(heading, content)).withSession("playerId" -> playerId.toString)
+        case Some(Answer(id, Word(word), lettersInCommon, state)) => {
+          state match {
+            case PlayerWon(playerId) => win(playerId)
+            case _ =>
+              answer(id, word, lettersInCommon)
+          }
         }
       }
       result
     }.getOrElse(Ok("BAD THING HAPPEN"))
   }
-  def index(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
-    import controllers.PlayerForm._
-    game = Game()
-    val playerId: Int = 0
-    val heading: String = s"Welcome to Word - add player ${playerId}"
-    Ok(views.html.addPlayerPost(heading, form, addPlayerPostUrl))
-      .withSession("playerId" -> playerId.toString)
-  }
 
-  // This will be the action that handles our form post
-  def handleAddPlayerPost(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
-    import controllers.PlayerForm._
-    val errorFunction: Form[PlayerData] => Result = {
-      formWithErrors: Form[PlayerData] =>
-        BadRequest(views.html.addPlayerPost("Uh oh, bad player add!", formWithErrors, addPlayerPostUrl))
-    }
-
-    val playerId: String = request.session.get("playerId").getOrElse("NO_ID")
-    val successFunction: PlayerData => Result = {
-      data: PlayerData => addPlayer(playerId.toInt, data.name, data.secretWord)
-    }
-
-    val formValidationResult = form.bindFromRequest()
-    formValidationResult.fold(errorFunction, successFunction)
-  }
 
   /*
    / -> index() --id=0--> views.html.addPlayerPost -> addPlayerPost() -> addPlayer(0) ->
   game.addPlayer(0) -> addPlayerForm(1) -> views.html.addPlayerPost(1) ->
    */
 
-  def addPlayerForm(playerId: Int, msg: String = "")(implicit request: MessagesRequest[AnyContent]): Result = {
-    import controllers.PlayerForm._
-    val formattedMsg: String = if (!msg.isEmpty) s" - ${msg}" else ""
-    val heading: String = s"Add player ${playerId} ${formattedMsg}"
-    Ok(views.html.addPlayerPost(heading, form, addPlayerPostUrl)).withSession("playerId" -> playerId.toString)
-  }
 
 
   def playerTurnForm(playerId: Int, msg: String = "")(implicit request: MessagesRequest[AnyContent]): Result = {
@@ -220,17 +193,29 @@ class HomeControllerPost @Inject()(cc: MessagesControllerComponents) extends Mes
 
   }
 
+
   def answer(playerId: Int, word: String, inCommon: Int)(implicit request: MessagesRequest[AnyContent]): Result = {
     import controllers.NextPlayerForm._ // can we use an empty form here if this is being passed in session?
     val name: String = game.playerName(playerId)
     log(s"name: ${name}")
-    val heading: String = s"${name} guessed ${word}. In common: ${inCommon}"
-    //    val action: String = s"/playerTurnForm/${
-    //      if (playerId == 0) 1 else 0
-    //    }"
+    val headingString: String = s"${name} guessed ${word}. In common: ${inCommon}"
+    val heading: Html = views.html.spaHeading(s"$gameName", headingString)
+    val content: Html = views.html.spaTurn()
     val nextPlayerId: Int = if (playerId == 0) 1 else 0
-    Ok(views.html.answerAndNextPlayerPost(playerId, heading, form, playerTurnFormUrl)).withSession("playerId" -> nextPlayerId.toString)
+    Ok(views.html.spa(heading, content)).withSession("playerId" -> nextPlayerId.toString)
   }
+
+//  def answer(playerId: Int, word: String, inCommon: Int)(implicit request: MessagesRequest[AnyContent]): Result = {
+//    import controllers.NextPlayerForm._ // can we use an empty form here if this is being passed in session?
+//    val name: String = game.playerName(playerId)
+//    log(s"name: ${name}")
+//    val heading: String = s"${name} guessed ${word}. In common: ${inCommon}"
+//    //    val action: String = s"/playerTurnForm/${
+//    //      if (playerId == 0) 1 else 0
+//    //    }"
+//    val nextPlayerId: Int = if (playerId == 0) 1 else 0
+//    Ok(views.html.answerAndNextPlayerPost(playerId, heading, form, playerTurnFormUrl)).withSession("playerId" -> nextPlayerId.toString)
+//  }
 
   def win(playerId: Int): Result = {
     val heading: String = s"${game.playerName(playerId)} wins!"

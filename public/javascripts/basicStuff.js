@@ -12,11 +12,11 @@ $('#add-player-submit').click(function(evt) {
 });
 
 $('#guess-submit').click(function(evt) {
-    const name = $("#guess").val();
-    const url = "apiAddPlayer";
+    const guess = $("#guess").val();
+    const url = "apiTurn";
     console.log("url:", url);
 
-	$.post(url, { playerName: name, secretWord: word }, data => {
+	$.post(url, { guess: guess }, data => {
 	    $("#page").html(data);
 	});
 });
